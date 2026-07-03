@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum LeadStatus {
+  NOVO
+  CONTATADO
+  CONVERTIDO
+  DESCARTADO
+}
+
+model AssistenciaTecnicaLead {
+  id                String     @id @default(cuid())
+  nome              String
+  whatsapp          String
+  modeloDispositivo String
+  descricaoProblema String     @db.Text
+  status            LeadStatus @default(NOVO)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  laudos Laudo[]
+
+  @@index([whatsapp])
+  @@index([status])
+  @@map("assistencia_tecnica_leads")
+}
+
+model EsteticaMotorLead {
+  id              String     @id @default(cuid())
+  nome            String
+  whatsapp        String
+  veiculo         String
+  servicoDesejado String     @db.Text
+  status          LeadStatus @default(NOVO)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  laudos Laudo[]
+
+  @@index([whatsapp])
+  @@index([status])
+  @@map("estetica_motor_leads")
+}
+
+// "Laudo Técnico" — an immutable entry-condition report issued at drop-off,
+// denormalized from its source lead so it never changes even if the lead is
+// later edited. This is the anti-fraud record shared with the client.
+model Laudo {
+  id                 String   @id @default(cuid())
+  numero             Int      @unique @default(autoincrement())
+  clienteNome        String
+  clienteWhatsapp    String
+  identificadorLabel String
+  identificadorValor String
+  itensChecklist     String[]
+  observacoesEntrada String   @db.Text
+  createdAt          DateTime @default(now())
+
+  assistenciaLeadId String?
+  assistenciaLead   AssistenciaTecnicaLead? @relation(fields: [assistenciaLeadId], references: [id])
+  esteticaLeadId    String?
+  esteticaLead      EsteticaMotorLead?      @relation(fields: [esteticaLeadId], references: [id])
+
+  @@index([assistenciaLeadId])
+  @@index([esteticaLeadId])
+  @@map("laudos")
+}
+
+// One admin per deployment (this is a white-label, single-tenant instance).
+// trialStartedAt is the anchor the billing gate computes "days remaining" from.
+model Admin {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  passwordHash   String
+  createdAt      DateTime @default(now())
+  trialStartedAt DateTime @default(now())
+
+  subscription Subscription?
+
+  @@map("admins")
+}
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELED
+}
+
+// One row per Admin (single-tenant deployment). Updated exclusively by the
+// Asaas webhook receiver (src/app/api/webhooks/asaas/route.ts) — never
+// written to from client-facing code.
+model Subscription {
+  id                  String             @id @default(cuid())
+  status              SubscriptionStatus @default(TRIALING)
+  asaasCustomerId     String?
+  asaasSubscriptionId String?
+  currentPeriodEnd    DateTime?
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  adminId String @unique
+  admin   Admin  @relation(fields: [adminId], references: [id])
+
+  @@map("subscriptions")
+}
