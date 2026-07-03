@@ -14,15 +14,22 @@ enum LeadStatus {
   DESCARTADO
 }
 
+enum StatusPagamento {
+  PENDENTE
+  PAGO
+}
+
 model AssistenciaTecnicaLead {
-  id                String     @id @default(cuid())
+  id                String          @id @default(cuid())
   nome              String
   whatsapp          String
   modeloDispositivo String
-  descricaoProblema String     @db.Text
-  status            LeadStatus @default(NOVO)
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
+  descricaoProblema String          @db.Text
+  status            LeadStatus      @default(NOVO)
+  valorServico      Decimal?        @db.Decimal(10, 2)
+  statusPagamento   StatusPagamento @default(PENDENTE)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
 
   laudos Laudo[]
 
@@ -32,14 +39,16 @@ model AssistenciaTecnicaLead {
 }
 
 model EsteticaMotorLead {
-  id              String     @id @default(cuid())
+  id              String          @id @default(cuid())
   nome            String
   whatsapp        String
   veiculo         String
-  servicoDesejado String     @db.Text
-  status          LeadStatus @default(NOVO)
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  servicoDesejado String          @db.Text
+  status          LeadStatus      @default(NOVO)
+  valorServico    Decimal?        @db.Decimal(10, 2)
+  statusPagamento StatusPagamento @default(PENDENTE)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 
   laudos Laudo[]
 

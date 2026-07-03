@@ -1,5 +1,6 @@
 import { prisma } from "@/server/db/client";
 import type { AssistenciaTecnicaLeadOutput } from "@/server/validators/assistencia-tecnica-lead.schema";
+import type { LeadFinancialsInput } from "@/server/validators/lead-financials.schema";
 import type { AssistenciaTecnicaLead, LeadStatus } from "@/generated/prisma/client";
 import { buildStatusCountMap } from "./shared/status-count";
 
@@ -25,6 +26,13 @@ export function updateAssistenciaTecnicaLeadStatus(
   status: LeadStatus
 ): Promise<AssistenciaTecnicaLead> {
   return prisma.assistenciaTecnicaLead.update({ where: { id }, data: { status } });
+}
+
+export function updateAssistenciaTecnicaLeadFinancials(
+  id: string,
+  data: LeadFinancialsInput
+): Promise<AssistenciaTecnicaLead> {
+  return prisma.assistenciaTecnicaLead.update({ where: { id }, data });
 }
 
 export async function countAssistenciaTecnicaLeadsByStatus(): Promise<Record<LeadStatus, number>> {

@@ -3,10 +3,12 @@ import { getActiveVertical } from "@/config/verticals";
 import { listAssistenciaTecnicaLeads } from "@/server/db/repositories/assistencia-tecnica-lead.repository";
 import { listEsteticaMotorLeads } from "@/server/db/repositories/estetica-motor-lead.repository";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { PaymentStatusBadge } from "@/components/ui/payment-status-badge";
 import { LeadStatusSelect } from "@/components/shared/dashboard/lead-status-select";
 import { buildWhatsAppLink } from "@/lib/whatsapp-link";
+import { formatCurrencyBRL } from "@/lib/currency";
 import { listLatestLaudoIdByLeadId } from "@/server/db/repositories/laudo.repository";
-import type { LeadStatus } from "@/generated/prisma/client";
+import type { LeadStatus, StatusPagamento } from "@/generated/prisma/client";
 
 // Leads change constantly — never bake the list into a build-time static page.
 export const dynamic = "force-dynamic";
@@ -38,6 +40,8 @@ interface LeadCardData {
   detailLabel: string;
   detailValue: string;
   whatsappMessage: string;
+  valorServico: number | null;
+  statusPagamento: StatusPagamento;
 }
 
 function isLeadStatus(value: string | undefined): value is LeadStatus {
@@ -67,6 +71,8 @@ export default async function DashboardLeadsPage({
           detailLabel: "Problema relatado",
           detailValue: lead.descricaoProblema,
           whatsappMessage: `Olá ${lead.nome}! Vi sua solicitação sobre o ${lead.modeloDispositivo} aqui no Nexis Drive. Podemos conversar sobre o reparo?`,
+          valorServico: lead.valorServico ? Number(lead.valorServico) : null,
+          statusPagamento: lead.statusPagamento,
         }))
       : (await listEsteticaMotorLeads(status)).map((lead) => ({
           id: lead.id,
@@ -79,6 +85,8 @@ export default async function DashboardLeadsPage({
           detailLabel: "Serviço desejado",
           detailValue: lead.servicoDesejado,
           whatsappMessage: `Olá ${lead.nome}! Vi sua solicitação sobre o ${lead.veiculo} aqui no Nexis Drive. Vamos falar sobre o serviço?`,
+          valorServico: lead.valorServico ? Number(lead.valorServico) : null,
+          statusPagamento: lead.statusPagamento,
         }));
 
   return (
@@ -135,7 +143,10 @@ export default async function DashboardLeadsPage({
                     {DATE_FORMATTER.format(lead.createdAt)}
                   </p>
                 </div>
-                <StatusBadge status={lead.status} />
+                <div className="flex items-center gap-2">
+                  <StatusBadge status={lead.status} />
+                  <PaymentStatusBadge status={lead.statusPagamento} />
+                </div>
               </div>
 
               <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm text-zinc-500 dark:text-zinc-400">
@@ -143,6 +154,9 @@ export default async function DashboardLeadsPage({
                   {lead.identifierLabel}: {lead.identifierValue}
                 </span>
                 <span>WhatsApp: {lead.whatsapp}</span>
+                <span className="font-medium text-zinc-700 dark:text-zinc-300">
+                  Valor: {formatCurrencyBRL(lead.valorServico)}
+                </span>
               </div>
 
               <p className="mt-3 rounded-xl bg-zinc-50 px-3.5 py-2.5 text-sm leading-relaxed text-zinc-600 dark:bg-zinc-800/60 dark:text-zinc-300">
@@ -150,6 +164,12 @@ export default async function DashboardLeadsPage({
               </p>
 
               <div className="mt-4 flex flex-wrap items-center gap-3">
+                <Link
+                  href={`/dashboard/leads/${lead.id}`}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-semibold text-white transition-colors duration-150 hover:opacity-90 dark:bg-white dark:text-zinc-900"
+                >
+                  Detalhes
+                </Link>
                 <LeadStatusSelect vertical={vertical} leadId={lead.id} currentStatus={lead.status} />
                 <a
                   href={buildWhatsAppLink(lead.whatsapp, lead.whatsappMessage)}

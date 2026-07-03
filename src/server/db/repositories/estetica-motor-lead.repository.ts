@@ -1,5 +1,6 @@
 import { prisma } from "@/server/db/client";
 import type { EsteticaMotoresLeadOutput } from "@/server/validators/estetica-motores-lead.schema";
+import type { LeadFinancialsInput } from "@/server/validators/lead-financials.schema";
 import type { EsteticaMotorLead, LeadStatus } from "@/generated/prisma/client";
 import { buildStatusCountMap } from "./shared/status-count";
 
@@ -25,6 +26,13 @@ export function updateEsteticaMotorLeadStatus(
   status: LeadStatus
 ): Promise<EsteticaMotorLead> {
   return prisma.esteticaMotorLead.update({ where: { id }, data: { status } });
+}
+
+export function updateEsteticaMotorLeadFinancials(
+  id: string,
+  data: LeadFinancialsInput
+): Promise<EsteticaMotorLead> {
+  return prisma.esteticaMotorLead.update({ where: { id }, data });
 }
 
 export async function countEsteticaMotorLeadsByStatus(): Promise<Record<LeadStatus, number>> {
