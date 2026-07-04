@@ -7,6 +7,7 @@ import { PaymentStatusBadge } from "@/components/ui/payment-status-badge";
 import { LeadStatusSelect } from "@/components/shared/dashboard/lead-status-select";
 import { buildWhatsAppLink } from "@/lib/whatsapp-link";
 import { formatCurrencyBRL } from "@/lib/currency";
+import { StatCard } from "@/components/ui/stat-card";
 import { listLatestLaudoIdByLeadId } from "@/server/db/repositories/laudo.repository";
 import type { LeadStatus, StatusPagamento } from "@/generated/prisma/client";
 
@@ -89,6 +90,17 @@ export default async function DashboardLeadsPage({
           statusPagamento: lead.statusPagamento,
         }));
 
+  // Computed from the leads already fetched above for this view (respects
+  // the active status filter) — not a separate aggregate query. Zero/null
+  // values never count toward either total.
+  const totalRecebido = leads
+    .filter((lead) => lead.statusPagamento === "PAGO" && lead.valorServico)
+    .reduce((sum, lead) => sum + (lead.valorServico as number), 0);
+
+  const totalEmAberto = leads
+    .filter((lead) => lead.statusPagamento === "PENDENTE" && lead.valorServico)
+    .reduce((sum, lead) => sum + (lead.valorServico as number), 0);
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -98,6 +110,12 @@ export default async function DashboardLeadsPage({
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           {leads.length} {leads.length === 1 ? "lead encontrado" : "leads encontrados"}
         </p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <StatCard label="Volume de leads" value={leads.length} tone="emphasis" />
+        <StatCard label="Total recebido" value={formatCurrencyBRL(totalRecebido)} tone="success" />
+        <StatCard label="Total em aberto" value={formatCurrencyBRL(totalEmAberto)} tone="warning" />
       </div>
 
       <nav className="flex flex-wrap gap-2">

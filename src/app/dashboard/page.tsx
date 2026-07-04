@@ -1,6 +1,7 @@
 import { getActiveVertical } from "@/config/verticals";
 import { countAssistenciaTecnicaLeadsByStatus } from "@/server/db/repositories/assistencia-tecnica-lead.repository";
 import { countEsteticaMotorLeadsByStatus } from "@/server/db/repositories/estetica-motor-lead.repository";
+import { StatCard } from "@/components/ui/stat-card";
 import type { LeadStatus } from "@/generated/prisma/client";
 
 // Leads change constantly — never bake counts into a build-time static page.
@@ -39,46 +40,11 @@ export default async function DashboardOverviewPage() {
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatCard label="Total de leads" value={total} emphasis />
+        <StatCard label="Total de leads" value={total} tone="emphasis" />
         {(Object.entries(counts) as [LeadStatus, number][]).map(([status, count]) => (
           <StatCard key={status} label={STATUS_LABELS[status]} value={count} />
         ))}
       </div>
-    </div>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  emphasis,
-}: {
-  label: string;
-  value: number;
-  emphasis?: boolean;
-}) {
-  return (
-    <div
-      className={`rounded-2xl border p-5 ${
-        emphasis
-          ? "border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
-          : "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
-      }`}
-    >
-      <p
-        className={`text-3xl font-semibold tracking-tight ${
-          emphasis ? "" : "text-zinc-900 dark:text-zinc-50"
-        }`}
-      >
-        {value}
-      </p>
-      <p
-        className={`mt-1 text-xs font-medium ${
-          emphasis ? "text-zinc-300 dark:text-zinc-600" : "text-zinc-500 dark:text-zinc-400"
-        }`}
-      >
-        {label}
-      </p>
     </div>
   );
 }
