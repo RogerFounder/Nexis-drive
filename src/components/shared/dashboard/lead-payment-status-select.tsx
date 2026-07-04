@@ -1,7 +1,8 @@
 "use client";
 
-import { useTransition, type ChangeEvent } from "react";
+import { useRef, useTransition, type ChangeEvent } from "react";
 import { updateLeadPaymentStatus } from "@/server/actions/update-lead-payment-status.action";
+import { useActionErrorFeedback } from "@/hooks/use-action-error-feedback";
 import type { Vertical } from "@/config/verticals";
 import type { StatusPagamento } from "@/generated/prisma/client";
 import { PAYMENT_STATUS_LABELS } from "@/components/ui/payment-status-badge";
@@ -26,26 +27,42 @@ export function LeadPaymentStatusSelect({
   currentStatus,
 }: LeadPaymentStatusSelectProps) {
   const [isPending, startTransition] = useTransition();
+  const { error, reportError } = useActionErrorFeedback();
+  const selectRef = useRef<HTMLSelectElement>(null);
 
   function handleChange(event: ChangeEvent<HTMLSelectElement>) {
+    const previousValue = currentStatus;
     const statusPagamento = event.target.value as StatusPagamento;
+
     startTransition(async () => {
-      await updateLeadPaymentStatus(vertical, leadId, statusPagamento);
+      const result = await updateLeadPaymentStatus(vertical, leadId, statusPagamento);
+      if (!result.success) {
+        reportError(result.error ?? "Não foi possível salvar o status de pagamento.");
+        if (selectRef.current) selectRef.current.value = previousValue;
+      }
     });
   }
 
   return (
-    <select
-      defaultValue={currentStatus}
-      disabled={isPending}
-      onChange={handleChange}
-      className={`shrink-0 rounded-full border px-2.5 py-1 text-xs font-semibold outline-none transition-[opacity,border-color] duration-150 disabled:opacity-50 ${TONE_CLASSES[currentStatus]}`}
-    >
-      {PAYMENT_STATUS_OPTIONS.map((status) => (
-        <option key={status} value={status}>
-          {PAYMENT_STATUS_LABELS[status]}
-        </option>
-      ))}
-    </select>
+    <div className="flex flex-col gap-1">
+      <select
+        ref={selectRef}
+        defaultValue={currentStatus}
+        disabled={isPending}
+        onChange={handleChange}
+        className={`shrink-0 rounded-full border px-2.5 py-1 text-xs font-semibold outline-none transition-[opacity,border-color] duration-150 disabled:opacity-50 ${TONE_CLASSES[currentStatus]}`}
+      >
+        {PAYMENT_STATUS_OPTIONS.map((status) => (
+          <option key={status} value={status}>
+            {PAYMENT_STATUS_LABELS[status]}
+          </option>
+        ))}
+      </select>
+      {error && (
+        <p role="alert" className="animate-field-message text-xs font-medium text-red-600 dark:text-red-400">
+          {error}
+        </p>
+      )}
+    </div>
   );
 }
