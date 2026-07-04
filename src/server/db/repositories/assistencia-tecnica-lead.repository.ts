@@ -1,7 +1,7 @@
 import { prisma } from "@/server/db/client";
 import type { AssistenciaTecnicaLeadOutput } from "@/server/validators/assistencia-tecnica-lead.schema";
 import type { LeadFinancialsInput } from "@/server/validators/lead-financials.schema";
-import type { AssistenciaTecnicaLead, LeadStatus } from "@/generated/prisma/client";
+import type { AssistenciaTecnicaLead, LeadStatus, StatusPagamento } from "@/generated/prisma/client";
 import { buildStatusCountMap } from "./shared/status-count";
 
 export function createAssistenciaTecnicaLead(
@@ -26,6 +26,13 @@ export function updateAssistenciaTecnicaLeadStatus(
   status: LeadStatus
 ): Promise<AssistenciaTecnicaLead> {
   return prisma.assistenciaTecnicaLead.update({ where: { id }, data: { status } });
+}
+
+export function updateAssistenciaTecnicaLeadPaymentStatus(
+  id: string,
+  statusPagamento: StatusPagamento
+): Promise<AssistenciaTecnicaLead> {
+  return prisma.assistenciaTecnicaLead.update({ where: { id }, data: { statusPagamento } });
 }
 
 export function updateAssistenciaTecnicaLeadFinancials(

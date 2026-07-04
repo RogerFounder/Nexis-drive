@@ -1,7 +1,7 @@
 import { prisma } from "@/server/db/client";
 import type { EsteticaMotoresLeadOutput } from "@/server/validators/estetica-motores-lead.schema";
 import type { LeadFinancialsInput } from "@/server/validators/lead-financials.schema";
-import type { EsteticaMotorLead, LeadStatus } from "@/generated/prisma/client";
+import type { EsteticaMotorLead, LeadStatus, StatusPagamento } from "@/generated/prisma/client";
 import { buildStatusCountMap } from "./shared/status-count";
 
 export function createEsteticaMotorLead(
@@ -26,6 +26,13 @@ export function updateEsteticaMotorLeadStatus(
   status: LeadStatus
 ): Promise<EsteticaMotorLead> {
   return prisma.esteticaMotorLead.update({ where: { id }, data: { status } });
+}
+
+export function updateEsteticaMotorLeadPaymentStatus(
+  id: string,
+  statusPagamento: StatusPagamento
+): Promise<EsteticaMotorLead> {
+  return prisma.esteticaMotorLead.update({ where: { id }, data: { statusPagamento } });
 }
 
 export function updateEsteticaMotorLeadFinancials(

@@ -3,8 +3,8 @@ import { getActiveVertical } from "@/config/verticals";
 import { listAssistenciaTecnicaLeads } from "@/server/db/repositories/assistencia-tecnica-lead.repository";
 import { listEsteticaMotorLeads } from "@/server/db/repositories/estetica-motor-lead.repository";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { PaymentStatusBadge } from "@/components/ui/payment-status-badge";
 import { LeadStatusSelect } from "@/components/shared/dashboard/lead-status-select";
+import { LeadPaymentStatusSelect } from "@/components/shared/dashboard/lead-payment-status-select";
 import { buildWhatsAppLink } from "@/lib/whatsapp-link";
 import { formatCurrencyBRL } from "@/lib/currency";
 import { StatCard } from "@/components/ui/stat-card";
@@ -38,8 +38,6 @@ interface LeadCardData {
   status: LeadStatus;
   identifierLabel: string;
   identifierValue: string;
-  detailLabel: string;
-  detailValue: string;
   whatsappMessage: string;
   valorServico: number | null;
   statusPagamento: StatusPagamento;
@@ -69,8 +67,6 @@ export default async function DashboardLeadsPage({
           status: lead.status,
           identifierLabel: "Dispositivo",
           identifierValue: lead.modeloDispositivo,
-          detailLabel: "Problema relatado",
-          detailValue: lead.descricaoProblema,
           whatsappMessage: `Olá ${lead.nome}! Vi sua solicitação sobre o ${lead.modeloDispositivo} aqui no Nexis Drive. Podemos conversar sobre o reparo?`,
           valorServico: lead.valorServico ? Number(lead.valorServico) : null,
           statusPagamento: lead.statusPagamento,
@@ -83,8 +79,6 @@ export default async function DashboardLeadsPage({
           status: lead.status,
           identifierLabel: "Veículo",
           identifierValue: lead.veiculo,
-          detailLabel: "Serviço desejado",
-          detailValue: lead.servicoDesejado,
           whatsappMessage: `Olá ${lead.nome}! Vi sua solicitação sobre o ${lead.veiculo} aqui no Nexis Drive. Vamos falar sobre o serviço?`,
           valorServico: lead.valorServico ? Number(lead.valorServico) : null,
           statusPagamento: lead.statusPagamento,
@@ -163,7 +157,11 @@ export default async function DashboardLeadsPage({
                 </div>
                 <div className="flex items-center gap-2">
                   <StatusBadge status={lead.status} />
-                  <PaymentStatusBadge status={lead.statusPagamento} />
+                  <LeadPaymentStatusSelect
+                    vertical={vertical}
+                    leadId={lead.id}
+                    currentStatus={lead.statusPagamento}
+                  />
                 </div>
               </div>
 
@@ -176,10 +174,6 @@ export default async function DashboardLeadsPage({
                   Valor: {formatCurrencyBRL(lead.valorServico)}
                 </span>
               </div>
-
-              <p className="mt-3 rounded-xl bg-zinc-50 px-3.5 py-2.5 text-sm leading-relaxed text-zinc-600 dark:bg-zinc-800/60 dark:text-zinc-300">
-                {lead.detailValue}
-              </p>
 
               <div className="mt-4 flex flex-wrap items-center gap-3">
                 <Link
