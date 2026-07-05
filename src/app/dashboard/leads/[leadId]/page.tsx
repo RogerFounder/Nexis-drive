@@ -5,7 +5,7 @@ import { getAssistenciaTecnicaLeadById } from "@/server/db/repositories/assisten
 import { getEsteticaMotorLeadById } from "@/server/db/repositories/estetica-motor-lead.repository";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { PaymentStatusBadge } from "@/components/ui/payment-status-badge";
-import { LeadFinancialsForm } from "@/components/shared/dashboard/lead-financials-form";
+import { LeadFinancialsForm } from "@/components/shared/dashboard/leads/lead-financials-form";
 import type { LeadStatus, StatusPagamento } from "@/generated/prisma/client";
 
 export const dynamic = "force-dynamic";

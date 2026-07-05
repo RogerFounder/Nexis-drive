@@ -21,7 +21,7 @@ export default async function Home() {
         ).EsteticaMotoresLeadForm;
 
   return (
-    <div className="flex flex-1 flex-col bg-zinc-50 dark:bg-black">
+    <div className="flex flex-1 flex-col bg-zinc-50 dark:bg-zinc-950">
       <main className="mx-auto flex w-full max-w-lg flex-1 flex-col gap-16 px-6 py-20 sm:py-28">
         <header className="mx-auto max-w-lg text-center">
           <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl dark:text-zinc-50">

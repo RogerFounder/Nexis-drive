@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { getLaudoById } from "@/server/db/repositories/laudo.repository";
 import { getActiveVertical } from "@/config/verticals";
 import { buildWarrantyText, buildWhatsAppSummary } from "@/lib/laudo-text";
-import { LaudoActionsBar } from "@/components/shared/laudo/laudo-actions-bar";
+import { LaudoActionsBar } from "@/components/shared/dashboard/laudo/laudo-actions-bar";
 
 export const dynamic = "force-dynamic";
 

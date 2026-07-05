@@ -4,7 +4,7 @@ import { getActiveVertical } from "@/config/verticals";
 import { CONDITION_CHECKLIST_ITEMS } from "@/config/condition-checklist";
 import { getAssistenciaTecnicaLeadById } from "@/server/db/repositories/assistencia-tecnica-lead.repository";
 import { getEsteticaMotorLeadById } from "@/server/db/repositories/estetica-motor-lead.repository";
-import { LaudoIntakeForm } from "@/components/shared/laudo/laudo-intake-form";
+import { LaudoIntakeForm } from "@/components/shared/dashboard/laudo/laudo-intake-form";
 
 export const dynamic = "force-dynamic";
 

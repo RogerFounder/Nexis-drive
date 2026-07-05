@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { logoutAction } from "@/server/actions/logout.action";
 import { requireDashboardAccess } from "@/server/services/billing/require-access";
-import { TrialBanner } from "@/components/shared/billing/trial-banner";
+import { TrialBanner } from "@/components/shared/dashboard/billing/trial-banner";
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const { email, access } = await requireDashboardAccess();

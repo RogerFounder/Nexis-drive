@@ -1,5 +1,9 @@
 # NEXIS-DRIVE ARCHITECTURE MANIFESTO
 
+See also `SYSTEM_IDENTITY.md` for tone/aesthetic DNA. Two of its aspirational items were deliberately NOT adopted as-is — reasoning kept here so it isn't re-litigated:
+- **No Framer Motion.** `SYSTEM_IDENTITY.md` names it under "fluidez" but also states "soluções nativas antes de bibliotecas externas" — the two conflict. Every transition in the app today is plain CSS (`transition-[transform,opacity]`, `active:scale-[0.98]`), which already delivers the "organic click feedback" ask at zero runtime cost. Revisit only if a specific interaction (gesture-drag, sequenced multi-step animation) genuinely can't be done in CSS.
+- **Semantic badge colors kept, not collapsed to one accent color.** `SYSTEM_IDENTITY.md` asks for grayscale + a single action color. The dashboard's whole value proposition (established with the user across the leads/financial-summary work) is scanning status at a glance — blue/amber/emerald/gray per state does real work there. Collapsing to one color would regress that. Pure black (`#000000`) WAS removed per the doc — dark backgrounds use `zinc-950` (graphite) everywhere now.
+
 ## Engineering rules
 - NEVER use placeholders or incomplete code like '// TODO'. Write production-ready blocks.
 - SECURITY: Mitigate OWASP Top 10 natively with Zod validation and secure middlewares.
