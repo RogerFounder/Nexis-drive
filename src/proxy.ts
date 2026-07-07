@@ -97,15 +97,22 @@ export async function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const csp = buildContentSecurityPolicy(nonce);
 
-  const clientIp = getClientIp(request);
-  const { limited, retryAfterSeconds } = checkRateLimit(clientIp);
+  // Only mutating requests (form submissions, Server Actions) count against
+  // the abuse limiter. Plain GET/HEAD navigation must never be throttled: a
+  // single page view can fan out into several GETs (RSC payload, prefetch,
+  // fonts), so counting those made the limit trivial to hit through normal
+  // browsing and could lock the site's own owner out of /login.
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    const clientIp = getClientIp(request);
+    const { limited, retryAfterSeconds } = checkRateLimit(clientIp);
 
-  if (limited) {
-    const blockedResponse = new NextResponse("Too Many Requests", {
-      status: 429,
-      headers: { "Retry-After": String(retryAfterSeconds) },
-    });
-    return applySecurityHeaders(blockedResponse, csp);
+    if (limited) {
+      const blockedResponse = new NextResponse("Too Many Requests", {
+        status: 429,
+        headers: { "Retry-After": String(retryAfterSeconds) },
+      });
+      return applySecurityHeaders(blockedResponse, csp);
+    }
   }
 
   const pathname = request.nextUrl.pathname;
