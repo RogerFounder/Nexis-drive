@@ -69,8 +69,23 @@ Sem isso configurado, o painel do cliente funciona normalmente durante o trial d
    - Ajusta os itens do checklist de laudo (vem com sugestões padrão)
    - Salva
 3. Depois de salvar, o painel completo (Visão geral, Leads, Laudo) libera normalmente
-4. O trial de 7 dias já está contando desde a criação da conta (passo 2) — o bloqueio
-   pra `/assinatura` acontece automaticamente quando expira
+4. O trial (7 dias por padrão) já está contando desde a criação da conta (passo 2) —
+   o bloqueio pra `/assinatura` acontece automaticamente quando expira
+
+## 6. Ajustar a duração do trial de um cliente específico
+
+Pra dar um trial promocional mais longo (ex: 30 dias) sem afetar nenhum outro
+cliente:
+
+```bash
+DATABASE_URL="<pooled do cliente>" \
+ADMIN_EMAIL="dono@clientexyz.com" \
+ADMIN_TRIAL_DAYS="30" \
+npx tsx scripts/set-trial-days.ts
+```
+
+Não mexe em senha nem reaplica migrations — só ajusta esse número. Pode rodar a
+qualquer momento, inclusive depois que o cliente já está usando o painel.
 
 ## Erros conhecidos desse processo
 
