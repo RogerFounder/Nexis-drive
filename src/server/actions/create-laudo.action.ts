@@ -6,6 +6,8 @@ import { laudoIntakeSchema } from "@/server/validators/laudo.schema";
 import { getAssistenciaTecnicaLeadById } from "@/server/db/repositories/assistencia-tecnica-lead.repository";
 import { getEsteticaMotorLeadById } from "@/server/db/repositories/estetica-motor-lead.repository";
 import { createLaudo } from "@/server/db/repositories/laudo.repository";
+import { getCurrentAdminSession } from "@/server/services/auth/current-admin";
+import { getEffectiveChecklistItems } from "@/server/services/settings/effective-checklist";
 
 export interface CreateLaudoActionState {
   success: boolean;
@@ -19,8 +21,13 @@ export async function createLaudoAction(
   formData: FormData
 ): Promise<CreateLaudoActionState> {
   const vertical = getActiveVertical();
+  const session = await getCurrentAdminSession();
+  if (!session) {
+    return { success: false, formError: "Sessão expirada. Faça login novamente." };
+  }
+  const allowedItems = await getEffectiveChecklistItems(session.adminId, vertical);
 
-  const parsed = laudoIntakeSchema(vertical).safeParse({
+  const parsed = laudoIntakeSchema(allowedItems).safeParse({
     itensChecklist: formData.getAll("itensChecklist"),
     observacoesEntrada: formData.get("observacoesEntrada"),
   });

@@ -91,8 +91,35 @@ model Admin {
   trialStartedAt DateTime @default(now())
 
   subscription Subscription?
+  settings     Settings?
 
   @@map("admins")
+}
+
+enum MotorServiceMode {
+  ESTETICA
+  OFICINA
+  AMBOS
+}
+
+// Owner-configurable settings for this deployment, filled in during the
+// post-login onboarding step and editable afterward from
+// /dashboard/configuracoes. motorServiceMode only applies to the "estetica"
+// vertical (which vehicle services this business offers); checklistItems
+// overrides the default suggestions in src/config/condition-checklist.ts for
+// the laudo intake form once the owner has saved their own list.
+model Settings {
+  id               String            @id @default(cuid())
+  motorServiceMode MotorServiceMode?
+  checklistItems   String[]
+  onboardingDone   Boolean           @default(false)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  adminId String @unique
+  admin   Admin  @relation(fields: [adminId], references: [id])
+
+  @@map("settings")
 }
 
 enum SubscriptionStatus {

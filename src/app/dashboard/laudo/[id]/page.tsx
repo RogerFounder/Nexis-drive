@@ -45,7 +45,7 @@ export default async function LaudoDocumentPage({
         <header className="flex items-start justify-between border-b border-zinc-200 pb-6 dark:border-zinc-800 print:border-zinc-300">
           <div>
             <p className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 print:text-black">
-              Nexis Drive
+              Nexus Drive
             </p>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 print:text-zinc-600">
               Laudo Técnico de Entrada

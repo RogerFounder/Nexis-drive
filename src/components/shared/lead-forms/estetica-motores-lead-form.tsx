@@ -5,18 +5,27 @@ import {
   submitEsteticaMotoresLead,
   type EsteticaMotoresLeadActionState,
 } from "@/server/actions/estetica-motores-lead.action";
+import { MOTOR_MODE_HEADING } from "@/config/verticals";
 import { FormCard } from "@/components/ui/form-card";
 import { FormAlert } from "@/components/ui/form-alert";
 import { TextField } from "@/components/ui/text-field";
 import { TextAreaField } from "@/components/ui/text-area-field";
 import { WhatsAppField } from "@/components/ui/whatsapp-field";
 import { SubmitButton } from "@/components/ui/submit-button";
+import type { MotorServiceMode } from "@/generated/prisma/client";
 
 const INITIAL_STATE: EsteticaMotoresLeadActionState = { success: false };
 
-export function EsteticaMotoresLeadForm() {
+interface EsteticaMotoresLeadFormProps {
+  motorServiceMode: MotorServiceMode | null;
+}
+
+export function EsteticaMotoresLeadForm({ motorServiceMode }: EsteticaMotoresLeadFormProps) {
   const [state, formAction] = useActionState(submitEsteticaMotoresLead, INITIAL_STATE);
   const formRef = useRef<HTMLFormElement>(null);
+  const heading = motorServiceMode
+    ? MOTOR_MODE_HEADING[motorServiceMode]
+    : MOTOR_MODE_HEADING.AMBOS;
 
   useEffect(() => {
     if (state.success) {
@@ -29,7 +38,7 @@ export function EsteticaMotoresLeadForm() {
       <form ref={formRef} action={formAction} noValidate className="flex flex-col gap-6">
         <header>
           <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Estética e Manutenção de Motores
+            {heading}
           </h2>
           <p className="mt-1.5 text-[15px] leading-relaxed text-zinc-500 dark:text-zinc-400">
             Diga o que o seu veículo precisa — montamos um orçamento e falamos com você pelo

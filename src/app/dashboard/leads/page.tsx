@@ -67,7 +67,7 @@ export default async function DashboardLeadsPage({
           status: lead.status,
           identifierLabel: "Dispositivo",
           identifierValue: lead.modeloDispositivo,
-          whatsappMessage: `Olá ${lead.nome}! Vi sua solicitação sobre o ${lead.modeloDispositivo} aqui no Nexis Drive. Podemos conversar sobre o reparo?`,
+          whatsappMessage: `Olá ${lead.nome}! Vi sua solicitação sobre o ${lead.modeloDispositivo} aqui no Nexus Drive. Podemos conversar sobre o reparo?`,
           valorServico: lead.valorServico ? Number(lead.valorServico) : null,
           statusPagamento: lead.statusPagamento,
         }))
@@ -79,7 +79,7 @@ export default async function DashboardLeadsPage({
           status: lead.status,
           identifierLabel: "Veículo",
           identifierValue: lead.veiculo,
-          whatsappMessage: `Olá ${lead.nome}! Vi sua solicitação sobre o ${lead.veiculo} aqui no Nexis Drive. Vamos falar sobre o serviço?`,
+          whatsappMessage: `Olá ${lead.nome}! Vi sua solicitação sobre o ${lead.veiculo} aqui no Nexus Drive. Vamos falar sobre o serviço?`,
           valorServico: lead.valorServico ? Number(lead.valorServico) : null,
           statusPagamento: lead.statusPagamento,
         }));

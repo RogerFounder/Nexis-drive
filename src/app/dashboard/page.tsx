@@ -1,6 +1,9 @@
-import { getActiveVertical } from "@/config/verticals";
+import { redirect } from "next/navigation";
+import { getActiveVertical, MOTOR_MODE_HEADING } from "@/config/verticals";
 import { countAssistenciaTecnicaLeadsByStatus } from "@/server/db/repositories/assistencia-tecnica-lead.repository";
 import { countEsteticaMotorLeadsByStatus } from "@/server/db/repositories/estetica-motor-lead.repository";
+import { getSettingsByAdminId } from "@/server/db/repositories/settings.repository";
+import { requireDashboardAccess } from "@/server/services/billing/require-access";
 import { StatCard } from "@/components/ui/stat-card";
 import type { LeadStatus } from "@/generated/prisma/client";
 
@@ -20,7 +23,15 @@ const VERTICAL_LABELS = {
 } as const;
 
 export default async function DashboardOverviewPage() {
+  const { adminId } = await requireDashboardAccess();
+  const settings = await getSettingsByAdminId(adminId);
+  if (!settings || !settings.onboardingDone) redirect("/dashboard/configuracoes");
+
   const vertical = getActiveVertical();
+  const verticalLabel =
+    vertical === "estetica" && settings.motorServiceMode
+      ? MOTOR_MODE_HEADING[settings.motorServiceMode]
+      : VERTICAL_LABELS[vertical];
   const counts =
     vertical === "assistencia"
       ? await countAssistenciaTecnicaLeadsByStatus()
@@ -35,7 +46,7 @@ export default async function DashboardOverviewPage() {
           Visão geral
         </h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          Vertente ativa: {VERTICAL_LABELS[vertical]}
+          Vertente ativa: {verticalLabel}
         </p>
       </div>
 

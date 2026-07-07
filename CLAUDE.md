@@ -12,7 +12,7 @@ See also `SYSTEM_IDENTITY.md` for tone/aesthetic DNA. Two of its aspirational it
 
 ## Product scope — "Antigravity" system (5 non-negotiable pillars)
 
-Nexis Drive is a white-label SaaS built on the Antigravity system design. Every implementation decision must trace back to one of these five pillars — this is the definitive scope, kept here so it survives context resets.
+Nexus Drive is a white-label SaaS built on the Antigravity system design. Every implementation decision must trace back to one of these five pillars — this is the definitive scope, kept here so it survives context resets.
 
 1. **Modular architecture (Option A) — white-label.** A single environment variable, `VERTENTE_ATIVA` (`"assistencia"` | `"estetica"`), decides which vertical's interface a given client's deployment serves. The inactive vertical must be 100% hidden — not rendered, not routed to, not shipped in the client bundle for that deployment.
 2. **Capture module (front-end).** Landing pages with input masks, character counters, and Zod validation, persisting leads to Neon Postgres. **Status: implemented** (lead forms + Server Actions + Prisma).

@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getActiveVertical } from "@/config/verticals";
-import { CONDITION_CHECKLIST_ITEMS } from "@/config/condition-checklist";
 import { getAssistenciaTecnicaLeadById } from "@/server/db/repositories/assistencia-tecnica-lead.repository";
 import { getEsteticaMotorLeadById } from "@/server/db/repositories/estetica-motor-lead.repository";
 import { LaudoIntakeForm } from "@/components/shared/dashboard/laudo/laudo-intake-form";
+import { getCurrentAdminSession } from "@/server/services/auth/current-admin";
+import { getEffectiveChecklistItems } from "@/server/services/settings/effective-checklist";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,10 @@ export default async function NovoLaudoPage({
 }) {
   const { leadId } = await params;
   const vertical = getActiveVertical();
+  const session = await getCurrentAdminSession();
+  const checklistItems = session
+    ? await getEffectiveChecklistItems(session.adminId, vertical)
+    : [];
 
   let nome: string;
   let identificadorLabel: string;
@@ -52,7 +57,7 @@ export default async function NovoLaudoPage({
       </div>
 
       <div className="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
-        <LaudoIntakeForm leadId={leadId} checklistItems={CONDITION_CHECKLIST_ITEMS[vertical]} />
+        <LaudoIntakeForm leadId={leadId} checklistItems={checklistItems} />
       </div>
     </div>
   );

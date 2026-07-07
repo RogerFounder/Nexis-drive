@@ -40,7 +40,7 @@ export function buildWhatsAppSummary(laudo: WhatsAppSummaryInput): string {
       : "• Nenhuma avaria visível registrada na entrada";
 
   return [
-    `*Laudo Técnico #${laudo.numero}* — Nexis Drive`,
+    `*Laudo Técnico #${laudo.numero}* — Nexus Drive`,
     `📅 ${SUMMARY_DATE_FORMATTER.format(laudo.createdAt)}`,
     "",
     `*Cliente:* ${laudo.clienteNome}`,
