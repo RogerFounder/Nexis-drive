@@ -1,6 +1,9 @@
 /**
- * Adjusts how many trial days a specific client gets, without touching
- * their password or re-running migrations. Safe to run anytime.
+ * Starts (or restarts) a client's trial countdown as of right now, for the
+ * given number of days — without touching their password or re-running
+ * migrations. Run it the moment you actually hand access to the client, not
+ * before: it resets trialStartedAt to the current time on every run, so
+ * running it early wastes days off the clock.
  *
  * Usage:
  *   DATABASE_URL="<pooled do cliente>" \
@@ -27,11 +30,13 @@ async function main() {
 
   const admin = await prisma.admin.update({
     where: { email },
-    data: { trialDurationDays },
+    data: { trialDurationDays, trialStartedAt: new Date() },
   });
   await prisma.$disconnect();
 
-  console.log(`${admin.email} agora tem ${trialDurationDays} dias de trial (id: ${admin.id}).`);
+  console.log(
+    `${admin.email} agora tem ${trialDurationDays} dias de trial, contando a partir de agora (id: ${admin.id}).`
+  );
 }
 
 main().catch((error) => {
