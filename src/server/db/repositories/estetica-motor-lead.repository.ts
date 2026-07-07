@@ -7,7 +7,10 @@ import { buildStatusCountMap } from "./shared/status-count";
 export function createEsteticaMotorLead(
   data: EsteticaMotoresLeadOutput
 ): Promise<EsteticaMotorLead> {
-  return prisma.esteticaMotorLead.create({ data });
+  const { consentimentoDados: _consentimentoDados, ...leadFields } = data;
+  return prisma.esteticaMotorLead.create({
+    data: { ...leadFields, consentimentoDadosEm: new Date() },
+  });
 }
 
 export function listEsteticaMotorLeads(status?: LeadStatus): Promise<EsteticaMotorLead[]> {
@@ -19,6 +22,11 @@ export function listEsteticaMotorLeads(status?: LeadStatus): Promise<EsteticaMot
 
 export function getEsteticaMotorLeadById(id: string): Promise<EsteticaMotorLead | null> {
   return prisma.esteticaMotorLead.findUnique({ where: { id } });
+}
+
+/** LGPD data-erasure request. Cascades to any laudo issued for this lead. */
+export async function deleteEsteticaMotorLead(id: string): Promise<void> {
+  await prisma.esteticaMotorLead.delete({ where: { id } });
 }
 
 export function updateEsteticaMotorLeadStatus(

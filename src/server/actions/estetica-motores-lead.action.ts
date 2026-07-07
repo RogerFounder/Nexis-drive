@@ -20,6 +20,7 @@ export async function submitEsteticaMotoresLead(
     whatsapp: formData.get("whatsapp"),
     veiculo: formData.get("veiculo"),
     servicoDesejado: formData.get("servicoDesejado"),
+    consentimentoDados: formData.get("consentimentoDados") === "on",
   });
 
   if (!parsed.success) {

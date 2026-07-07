@@ -20,6 +20,7 @@ export async function submitAssistenciaTecnicaLead(
     whatsapp: formData.get("whatsapp"),
     modeloDispositivo: formData.get("modeloDispositivo"),
     descricaoProblema: formData.get("descricaoProblema"),
+    consentimentoDados: formData.get("consentimentoDados") === "on",
   });
 
   if (!parsed.success) {

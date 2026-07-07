@@ -18,6 +18,9 @@ export const assistenciaTecnicaLeadSchema = z.object({
     max: 1000,
     fieldLabel: "A descrição do problema",
   }),
+  consentimentoDados: z
+    .boolean()
+    .refine((value) => value === true, "É necessário aceitar a Política de Privacidade para continuar."),
 });
 
 export type AssistenciaTecnicaLeadInput = z.input<typeof assistenciaTecnicaLeadSchema>;

@@ -18,6 +18,9 @@ export const esteticaMotoresLeadSchema = z.object({
     max: 500,
     fieldLabel: "O serviço desejado",
   }),
+  consentimentoDados: z
+    .boolean()
+    .refine((value) => value === true, "É necessário aceitar a Política de Privacidade para continuar."),
 });
 
 export type EsteticaMotoresLeadInput = z.input<typeof esteticaMotoresLeadSchema>;

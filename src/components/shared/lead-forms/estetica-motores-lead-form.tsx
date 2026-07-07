@@ -11,6 +11,7 @@ import { FormAlert } from "@/components/ui/form-alert";
 import { TextField } from "@/components/ui/text-field";
 import { TextAreaField } from "@/components/ui/text-area-field";
 import { WhatsAppField } from "@/components/ui/whatsapp-field";
+import { PrivacyConsentCheckbox } from "@/components/ui/privacy-consent-checkbox";
 import { SubmitButton } from "@/components/ui/submit-button";
 import type { MotorServiceMode } from "@/generated/prisma/client";
 
@@ -90,6 +91,12 @@ export function EsteticaMotoresLeadForm({ motorServiceMode }: EsteticaMotoresLea
             error={state.fieldErrors?.servicoDesejado}
           />
         </div>
+
+        <PrivacyConsentCheckbox
+          id="em-consentimento"
+          name="consentimentoDados"
+          error={state.fieldErrors?.consentimentoDados}
+        />
 
         <SubmitButton pendingLabel="Enviando...">Solicitar orçamento</SubmitButton>
       </form>

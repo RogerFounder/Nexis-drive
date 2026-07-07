@@ -20,16 +20,21 @@ enum StatusPagamento {
 }
 
 model AssistenciaTecnicaLead {
-  id                String          @id @default(cuid())
-  nome              String
-  whatsapp          String
-  modeloDispositivo String
-  descricaoProblema String          @db.Text
-  status            LeadStatus      @default(NOVO)
-  valorServico      Decimal?        @db.Decimal(10, 2)
-  statusPagamento   StatusPagamento @default(PENDENTE)
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
+  id                   String          @id @default(cuid())
+  nome                 String
+  whatsapp             String
+  modeloDispositivo    String
+  descricaoProblema    String          @db.Text
+  status               LeadStatus      @default(NOVO)
+  valorServico         Decimal?        @db.Decimal(10, 2)
+  statusPagamento      StatusPagamento @default(PENDENTE)
+  // LGPD — timestamp of the data subject's consent at submission time,
+  // required by the form before it will submit. Kept as evidence. Nullable
+  // because leads captured before this field existed have no recorded
+  // consent — never backfilled with a fabricated timestamp.
+  consentimentoDadosEm DateTime?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
 
   laudos Laudo[]
 
@@ -39,16 +44,21 @@ model AssistenciaTecnicaLead {
 }
 
 model EsteticaMotorLead {
-  id              String          @id @default(cuid())
-  nome            String
-  whatsapp        String
-  veiculo         String
-  servicoDesejado String          @db.Text
-  status          LeadStatus      @default(NOVO)
-  valorServico    Decimal?        @db.Decimal(10, 2)
-  statusPagamento StatusPagamento @default(PENDENTE)
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  id                   String          @id @default(cuid())
+  nome                 String
+  whatsapp             String
+  veiculo              String
+  servicoDesejado      String          @db.Text
+  status               LeadStatus      @default(NOVO)
+  valorServico         Decimal?        @db.Decimal(10, 2)
+  statusPagamento      StatusPagamento @default(PENDENTE)
+  // LGPD — timestamp of the data subject's consent at submission time,
+  // required by the form before it will submit. Kept as evidence. Nullable
+  // because leads captured before this field existed have no recorded
+  // consent — never backfilled with a fabricated timestamp.
+  consentimentoDadosEm DateTime?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
 
   laudos Laudo[]
 
@@ -71,10 +81,12 @@ model Laudo {
   observacoesEntrada String   @db.Text
   createdAt          DateTime @default(now())
 
+  // Cascade: a laudo has no standalone meaning once its source lead (the
+  // same data subject) is deleted for an LGPD request — both must go together.
   assistenciaLeadId String?
-  assistenciaLead   AssistenciaTecnicaLead? @relation(fields: [assistenciaLeadId], references: [id])
+  assistenciaLead   AssistenciaTecnicaLead? @relation(fields: [assistenciaLeadId], references: [id], onDelete: Cascade)
   esteticaLeadId    String?
-  esteticaLead      EsteticaMotorLead?      @relation(fields: [esteticaLeadId], references: [id])
+  esteticaLead      EsteticaMotorLead?      @relation(fields: [esteticaLeadId], references: [id], onDelete: Cascade)
 
   @@index([assistenciaLeadId])
   @@index([esteticaLeadId])

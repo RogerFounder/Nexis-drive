@@ -10,6 +10,7 @@ import { FormAlert } from "@/components/ui/form-alert";
 import { TextField } from "@/components/ui/text-field";
 import { TextAreaField } from "@/components/ui/text-area-field";
 import { WhatsAppField } from "@/components/ui/whatsapp-field";
+import { PrivacyConsentCheckbox } from "@/components/ui/privacy-consent-checkbox";
 import { SubmitButton } from "@/components/ui/submit-button";
 
 const INITIAL_STATE: AssistenciaTecnicaLeadActionState = { success: false };
@@ -81,6 +82,12 @@ export function AssistenciaTecnicaLeadForm() {
             error={state.fieldErrors?.descricaoProblema}
           />
         </div>
+
+        <PrivacyConsentCheckbox
+          id="at-consentimento"
+          name="consentimentoDados"
+          error={state.fieldErrors?.consentimentoDados}
+        />
 
         <SubmitButton pendingLabel="Enviando...">Solicitar atendimento</SubmitButton>
       </form>

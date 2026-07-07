@@ -7,7 +7,10 @@ import { buildStatusCountMap } from "./shared/status-count";
 export function createAssistenciaTecnicaLead(
   data: AssistenciaTecnicaLeadOutput
 ): Promise<AssistenciaTecnicaLead> {
-  return prisma.assistenciaTecnicaLead.create({ data });
+  const { consentimentoDados: _consentimentoDados, ...leadFields } = data;
+  return prisma.assistenciaTecnicaLead.create({
+    data: { ...leadFields, consentimentoDadosEm: new Date() },
+  });
 }
 
 export function listAssistenciaTecnicaLeads(status?: LeadStatus): Promise<AssistenciaTecnicaLead[]> {
@@ -19,6 +22,11 @@ export function listAssistenciaTecnicaLeads(status?: LeadStatus): Promise<Assist
 
 export function getAssistenciaTecnicaLeadById(id: string): Promise<AssistenciaTecnicaLead | null> {
   return prisma.assistenciaTecnicaLead.findUnique({ where: { id } });
+}
+
+/** LGPD data-erasure request. Cascades to any laudo issued for this lead. */
+export async function deleteAssistenciaTecnicaLead(id: string): Promise<void> {
+  await prisma.assistenciaTecnicaLead.delete({ where: { id } });
 }
 
 export function updateAssistenciaTecnicaLeadStatus(

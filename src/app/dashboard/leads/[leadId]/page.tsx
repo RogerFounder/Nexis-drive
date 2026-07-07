@@ -6,6 +6,7 @@ import { getEsteticaMotorLeadById } from "@/server/db/repositories/estetica-moto
 import { StatusBadge } from "@/components/ui/status-badge";
 import { PaymentStatusBadge } from "@/components/ui/payment-status-badge";
 import { LeadFinancialsForm } from "@/components/shared/dashboard/leads/lead-financials-form";
+import { DeleteLeadButton } from "@/components/shared/dashboard/leads/delete-lead-button";
 import type { LeadStatus, StatusPagamento } from "@/generated/prisma/client";
 
 export const dynamic = "force-dynamic";
@@ -136,6 +137,8 @@ export default async function LeadDetailPage({
           statusPagamento={lead.statusPagamento}
         />
       </div>
+
+      <DeleteLeadButton leadId={lead.id} leadNome={lead.nome} />
     </div>
   );
 }
