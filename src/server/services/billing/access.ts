@@ -1,6 +1,7 @@
 import type { Admin, Subscription } from "@/generated/prisma/client";
 
-export const TRIAL_DURATION_DAYS = 7;
+/** Fallback used only where no Admin row is available yet (e.g. provisioning defaults). */
+export const DEFAULT_TRIAL_DURATION_DAYS = 7;
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 export type AccessReason = "SUBSCRIPTION_ACTIVE" | "TRIAL" | "EXPIRED";
@@ -12,18 +13,20 @@ export interface AccessState {
   trialDaysRemaining: number;
 }
 
-function trialEndsAt(trialStartedAt: Date): Date {
-  return new Date(trialStartedAt.getTime() + TRIAL_DURATION_DAYS * MS_PER_DAY);
+function trialEndsAt(trialStartedAt: Date, trialDurationDays: number): Date {
+  return new Date(trialStartedAt.getTime() + trialDurationDays * MS_PER_DAY);
 }
 
 /**
  * Single source of truth for "can this admin use the dashboard right now".
  * A paid subscription wins outright; otherwise access falls back to the
- * 7-day trial window. Pure function — pass `now` so it's deterministic and
- * testable, defaulting to the real clock in production.
+ * per-admin trial window (trialDurationDays — 7 by default, but overridable
+ * per deployment, e.g. for a promotional extended trial). Pure function —
+ * pass `now` so it's deterministic and testable, defaulting to the real
+ * clock in production.
  */
 export function resolveAccessState(
-  admin: Pick<Admin, "trialStartedAt"> & { subscription: Subscription | null },
+  admin: Pick<Admin, "trialStartedAt" | "trialDurationDays"> & { subscription: Subscription | null },
   now: Date = new Date()
 ): AccessState {
   const sub = admin.subscription;
@@ -35,7 +38,7 @@ export function resolveAccessState(
     }
   }
 
-  const endsAt = trialEndsAt(admin.trialStartedAt);
+  const endsAt = trialEndsAt(admin.trialStartedAt, admin.trialDurationDays);
   const msRemaining = endsAt.getTime() - now.getTime();
 
   if (msRemaining > 0) {

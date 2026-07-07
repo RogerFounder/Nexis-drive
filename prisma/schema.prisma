@@ -83,12 +83,15 @@ model Laudo {
 
 // One admin per deployment (this is a white-label, single-tenant instance).
 // trialStartedAt is the anchor the billing gate computes "days remaining" from.
+// trialDurationDays defaults to the standard 7 but can be overridden per admin
+// (e.g. a promotional extended trial) without touching any other deployment.
 model Admin {
-  id             String   @id @default(cuid())
-  email          String   @unique
-  passwordHash   String
-  createdAt      DateTime @default(now())
-  trialStartedAt DateTime @default(now())
+  id                String   @id @default(cuid())
+  email             String   @unique
+  passwordHash      String
+  createdAt         DateTime @default(now())
+  trialStartedAt    DateTime @default(now())
+  trialDurationDays Int      @default(7)
 
   subscription Subscription?
   settings     Settings?
