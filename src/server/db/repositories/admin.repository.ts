@@ -14,3 +14,7 @@ export type AdminWithSubscription = Admin & { subscription: Subscription | null 
 export function getAdminWithSubscription(id: string): Promise<AdminWithSubscription | null> {
   return prisma.admin.findUnique({ where: { id }, include: { subscription: true } });
 }
+
+export async function updateAdminPassword(id: string, passwordHash: string): Promise<void> {
+  await prisma.admin.update({ where: { id }, data: { passwordHash } });
+}

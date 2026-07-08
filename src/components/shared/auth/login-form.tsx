@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 import { loginAction, type LoginActionState } from "@/server/actions/login.action";
 import { FormCard } from "@/components/ui/form-card";
 import { FormAlert } from "@/components/ui/form-alert";
@@ -11,9 +12,10 @@ const INITIAL_STATE: LoginActionState = { success: false };
 
 interface LoginFormProps {
   redirectTo?: string;
+  resetSuccess?: boolean;
 }
 
-export function LoginForm({ redirectTo }: LoginFormProps) {
+export function LoginForm({ redirectTo, resetSuccess }: LoginFormProps) {
   const [state, formAction] = useActionState(loginAction, INITIAL_STATE);
 
   return (
@@ -21,6 +23,11 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
       <form action={formAction} noValidate className="flex flex-col gap-6">
         {redirectTo && <input type="hidden" name="redirectTo" value={redirectTo} />}
 
+        {resetSuccess && (
+          <FormAlert variant="success">
+            Senha redefinida com sucesso. Entre com sua nova senha.
+          </FormAlert>
+        )}
         {state.formError && <FormAlert variant="error">{state.formError}</FormAlert>}
 
         <div className="flex flex-col gap-5">
@@ -45,6 +52,13 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
         </div>
 
         <SubmitButton pendingLabel="Entrando...">Entrar</SubmitButton>
+
+        <Link
+          href="/esqueci-senha"
+          className="text-center text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
+        >
+          Esqueci minha senha
+        </Link>
       </form>
     </FormCard>
   );

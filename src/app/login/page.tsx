@@ -3,9 +3,9 @@ import { LoginForm } from "@/components/shared/auth/login-form";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ from?: string }>;
+  searchParams: Promise<{ from?: string; reset?: string }>;
 }) {
-  const { from } = await searchParams;
+  const { from, reset } = await searchParams;
 
   return (
     <div className="flex flex-1 flex-col bg-zinc-50 dark:bg-zinc-950 lg:grid lg:grid-cols-2">
@@ -33,7 +33,7 @@ export default async function LoginPage({
             Acesso restrito ao painel administrativo
           </p>
         </div>
-        <LoginForm redirectTo={from} />
+        <LoginForm redirectTo={from} resetSuccess={reset === "success"} />
       </div>
     </div>
   );

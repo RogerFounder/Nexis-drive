@@ -38,7 +38,7 @@ export default async function LaudoDocumentPage({
         >
           ← Todos os laudos
         </Link>
-        <LaudoActionsBar whatsappSummary={whatsappSummary} />
+        <LaudoActionsBar whatsappSummary={whatsappSummary} laudoId={laudo.id} />
       </div>
 
       <div className="rounded-3xl border border-zinc-200 bg-white p-8 sm:p-10 print:rounded-none print:border-none print:p-0 dark:border-zinc-800 dark:bg-zinc-900">

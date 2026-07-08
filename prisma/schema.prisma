@@ -105,10 +105,29 @@ model Admin {
   trialStartedAt    DateTime @default(now())
   trialDurationDays Int      @default(7)
 
-  subscription Subscription?
-  settings     Settings?
+  subscription        Subscription?
+  settings            Settings?
+  passwordResetTokens PasswordResetToken[]
 
   @@map("admins")
+}
+
+// Self-service "forgot password" flow. Only the SHA-256 hash of the raw
+// token is stored — the raw value only ever exists in the emailed link, so
+// a database leak alone can't be used to reset anyone's password. Each
+// token is single-use (usedAt) and short-lived (expiresAt).
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  adminId String
+  admin   Admin  @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@map("password_reset_tokens")
 }
 
 enum MotorServiceMode {
