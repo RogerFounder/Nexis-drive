@@ -1,5 +1,6 @@
 import { sendEmailNotification } from "./email-channel";
 import { sendWebhookNotification } from "./webhook-channel";
+import { reportError } from "@/server/services/monitoring/report-error";
 import type { LeadNotificationPayload } from "./types";
 
 export type { LeadNotificationPayload, LeadVertical } from "./types";
@@ -19,10 +20,7 @@ export async function notifyNewLead(payload: LeadNotificationPayload): Promise<v
 
   results.forEach((result, index) => {
     if (result.status === "rejected") {
-      console.error(
-        `[lead-notifier] Falha ao notificar via ${CHANNEL_NAMES[index]} (lead ${payload.leadId}):`,
-        result.reason
-      );
+      reportError(`lead-notifier:${CHANNEL_NAMES[index]}`, result.reason);
     }
   });
 }

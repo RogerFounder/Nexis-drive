@@ -5,6 +5,7 @@ import type { Vertical } from "@/config/verticals";
 import type { LeadStatus } from "@/generated/prisma/client";
 import { updateAssistenciaTecnicaLeadStatus } from "@/server/db/repositories/assistencia-tecnica-lead.repository";
 import { updateEsteticaMotorLeadStatus } from "@/server/db/repositories/estetica-motor-lead.repository";
+import { reportError } from "@/server/services/monitoring/report-error";
 
 const VALID_STATUSES: readonly LeadStatus[] = ["NOVO", "CONTATADO", "CONVERTIDO", "DESCARTADO"];
 const VALID_VERTICALS: readonly Vertical[] = ["assistencia", "estetica"];
@@ -30,7 +31,7 @@ export async function updateLeadStatus(
       await updateEsteticaMotorLeadStatus(leadId, status);
     }
   } catch (error) {
-    console.error("[updateLeadStatus] Falha ao atualizar status:", error);
+    reportError("updateLeadStatus", error);
     return { success: false, error: "Não foi possível atualizar o status." };
   }
 

@@ -3,6 +3,7 @@
 import { assistenciaTecnicaLeadSchema } from "@/server/validators/assistencia-tecnica-lead.schema";
 import { createAssistenciaTecnicaLead } from "@/server/db/repositories/assistencia-tecnica-lead.repository";
 import { notifyNewLead } from "@/server/services/notifications/lead-notifier";
+import { reportError } from "@/server/services/monitoring/report-error";
 
 export interface AssistenciaTecnicaLeadActionState {
   success: boolean;
@@ -34,7 +35,7 @@ export async function submitAssistenciaTecnicaLead(
   try {
     lead = await createAssistenciaTecnicaLead(parsed.data);
   } catch (error) {
-    console.error("[submitAssistenciaTecnicaLead] Falha ao persistir lead:", error);
+    reportError("submitAssistenciaTecnicaLead", error);
     return {
       success: false,
       formError: "Não foi possível registrar sua solicitação agora. Tente novamente em instantes.",

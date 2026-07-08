@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getActiveVertical } from "@/config/verticals";
 import { deleteAssistenciaTecnicaLead } from "@/server/db/repositories/assistencia-tecnica-lead.repository";
 import { deleteEsteticaMotorLead } from "@/server/db/repositories/estetica-motor-lead.repository";
+import { reportError } from "@/server/services/monitoring/report-error";
 
 export interface DeleteLeadState {
   formError?: string;
@@ -27,7 +28,7 @@ export async function deleteLeadAction(
       await deleteEsteticaMotorLead(leadId);
     }
   } catch (error) {
-    console.error("[deleteLeadAction] Falha ao excluir lead:", error);
+    reportError("deleteLeadAction", error);
     return { formError: "Não foi possível excluir os dados agora. Tente novamente." };
   }
 

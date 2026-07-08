@@ -5,6 +5,7 @@ import { getActiveVertical } from "@/config/verticals";
 import { settingsSchema } from "@/server/validators/settings.schema";
 import { upsertSettings } from "@/server/db/repositories/settings.repository";
 import { getCurrentAdminSession } from "@/server/services/auth/current-admin";
+import { reportError } from "@/server/services/monitoring/report-error";
 import type { MotorServiceMode } from "@/generated/prisma/client";
 
 export interface UpdateSettingsActionState {
@@ -44,7 +45,7 @@ export async function updateSettingsAction(
       checklistItems: parsed.data.checklistItems,
     });
   } catch (error) {
-    console.error("[updateSettingsAction] Falha ao salvar configurações:", error);
+    reportError("updateSettingsAction", error);
     return { success: false, formError: "Não foi possível salvar agora. Tente novamente." };
   }
 

@@ -6,6 +6,7 @@ import { getAdminByEmail } from "@/server/db/repositories/admin.repository";
 import { createPasswordResetToken } from "@/server/db/repositories/password-reset-token.repository";
 import { generateResetToken, hashResetToken, RESET_TOKEN_TTL_MS } from "@/server/services/auth/password-reset-token";
 import { sendPasswordResetEmail } from "@/server/services/notifications/email-channel";
+import { reportError } from "@/server/services/monitoring/report-error";
 
 export interface RequestPasswordResetState {
   submitted: boolean;
@@ -44,13 +45,14 @@ export async function requestPasswordResetAction(
       const resetUrl = `${origin}/redefinir-senha?token=${rawToken}`;
       const sent = await sendPasswordResetEmail(admin.email, resetUrl);
       if (!sent) {
-        console.error(
-          "[requestPasswordResetAction] Canal de e-mail não configurado (RESEND_API_KEY/LEAD_NOTIFICATION_EMAIL_FROM) — link não enviado."
+        reportError(
+          "requestPasswordResetAction",
+          new Error("Canal de e-mail não configurado (RESEND_API_KEY/LEAD_NOTIFICATION_EMAIL_FROM) — link não enviado.")
         );
       }
     }
   } catch (error) {
-    console.error("[requestPasswordResetAction] Falha ao processar solicitação:", error);
+    reportError("requestPasswordResetAction", error);
     // Still return the generic success message — do not leak internal state.
   }
 

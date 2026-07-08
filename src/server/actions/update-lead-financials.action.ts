@@ -5,6 +5,7 @@ import { getActiveVertical } from "@/config/verticals";
 import { leadFinancialsSchema } from "@/server/validators/lead-financials.schema";
 import { updateAssistenciaTecnicaLeadFinancials } from "@/server/db/repositories/assistencia-tecnica-lead.repository";
 import { updateEsteticaMotorLeadFinancials } from "@/server/db/repositories/estetica-motor-lead.repository";
+import { reportError } from "@/server/services/monitoring/report-error";
 
 export interface UpdateLeadFinancialsState {
   success: boolean;
@@ -35,7 +36,7 @@ export async function updateLeadFinancialsAction(
       await updateEsteticaMotorLeadFinancials(leadId, parsed.data);
     }
   } catch (error) {
-    console.error("[updateLeadFinancialsAction] Falha ao atualizar dados financeiros:", error);
+    reportError("updateLeadFinancialsAction", error);
     return {
       success: false,
       formError: "Não foi possível salvar os dados financeiros agora. Tente novamente.",

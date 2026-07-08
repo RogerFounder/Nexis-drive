@@ -3,6 +3,7 @@
 import { esteticaMotoresLeadSchema } from "@/server/validators/estetica-motores-lead.schema";
 import { createEsteticaMotorLead } from "@/server/db/repositories/estetica-motor-lead.repository";
 import { notifyNewLead } from "@/server/services/notifications/lead-notifier";
+import { reportError } from "@/server/services/monitoring/report-error";
 
 export interface EsteticaMotoresLeadActionState {
   success: boolean;
@@ -34,7 +35,7 @@ export async function submitEsteticaMotoresLead(
   try {
     lead = await createEsteticaMotorLead(parsed.data);
   } catch (error) {
-    console.error("[submitEsteticaMotoresLead] Falha ao persistir lead:", error);
+    reportError("submitEsteticaMotoresLead", error);
     return {
       success: false,
       formError: "Não foi possível registrar sua solicitação agora. Tente novamente em instantes.",

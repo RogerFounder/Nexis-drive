@@ -5,6 +5,7 @@ import type { Vertical } from "@/config/verticals";
 import type { StatusPagamento } from "@/generated/prisma/client";
 import { updateAssistenciaTecnicaLeadPaymentStatus } from "@/server/db/repositories/assistencia-tecnica-lead.repository";
 import { updateEsteticaMotorLeadPaymentStatus } from "@/server/db/repositories/estetica-motor-lead.repository";
+import { reportError } from "@/server/services/monitoring/report-error";
 
 const VALID_STATUSES: readonly StatusPagamento[] = ["PENDENTE", "PAGO"];
 const VALID_VERTICALS: readonly Vertical[] = ["assistencia", "estetica"];
@@ -35,7 +36,7 @@ export async function updateLeadPaymentStatus(
       await updateEsteticaMotorLeadPaymentStatus(leadId, statusPagamento);
     }
   } catch (error) {
-    console.error("[updateLeadPaymentStatus] Falha ao atualizar status de pagamento:", error);
+    reportError("updateLeadPaymentStatus", error);
     return { success: false, error: "Não foi possível atualizar o status de pagamento." };
   }
 

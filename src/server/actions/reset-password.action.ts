@@ -9,6 +9,7 @@ import {
 import { updateAdminPassword } from "@/server/db/repositories/admin.repository";
 import { hashResetToken } from "@/server/services/auth/password-reset-token";
 import { hashPassword } from "@/server/services/auth/password";
+import { reportError } from "@/server/services/monitoring/report-error";
 
 export interface ResetPasswordState {
   fieldErrors?: Record<string, string[]>;
@@ -43,7 +44,7 @@ export async function resetPasswordAction(
     await updateAdminPassword(found.admin.id, passwordHash);
     await markPasswordResetTokenUsed(found.id);
   } catch (error) {
-    console.error("[resetPasswordAction] Falha ao redefinir senha:", error);
+    reportError("resetPasswordAction", error);
     return { formError: "Não foi possível redefinir sua senha agora. Tente novamente." };
   }
 

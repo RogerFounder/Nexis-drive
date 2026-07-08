@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import * as Sentry from "@sentry/nextjs";
 
 export default function GlobalError({
   error,
@@ -13,6 +14,7 @@ export default function GlobalError({
     // Server-side render/runtime errors don't reach our Server Action
     // catch blocks — this is the last line of defense, so it must log too.
     console.error("[global-error]", error);
+    Sentry.captureException(error);
   }, [error]);
 
   return (

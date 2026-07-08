@@ -8,6 +8,7 @@ import { getEsteticaMotorLeadById } from "@/server/db/repositories/estetica-moto
 import { createLaudo } from "@/server/db/repositories/laudo.repository";
 import { getCurrentAdminSession } from "@/server/services/auth/current-admin";
 import { getEffectiveChecklistItems } from "@/server/services/settings/effective-checklist";
+import { reportError } from "@/server/services/monitoring/report-error";
 
 export interface CreateLaudoActionState {
   success: boolean;
@@ -75,7 +76,7 @@ export async function createLaudoAction(
     });
     laudoId = laudo.id;
   } catch (error) {
-    console.error("[createLaudoAction] Falha ao criar laudo:", error);
+    reportError("createLaudoAction", error);
     return {
       success: false,
       formError: "Não foi possível gerar o laudo agora. Tente novamente.",

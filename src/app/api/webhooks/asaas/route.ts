@@ -4,6 +4,7 @@ import {
   verifyAsaasToken,
   type AsaasWebhookPayload,
 } from "@/server/services/billing/asaas-webhook";
+import { reportError } from "@/server/services/monitoring/report-error";
 
 // Webhook receiver — called by Asaas, never by a browser. Authenticated by
 // the shared access token Asaas sends in the "asaas-access-token" header.
@@ -25,7 +26,7 @@ export async function POST(request: NextRequest) {
     // retrying — the outcome tells us whether state actually changed.
     return NextResponse.json({ outcome });
   } catch (error) {
-    console.error("[asaas-webhook] Falha ao processar evento:", error);
+    reportError("asaas-webhook", error);
     return NextResponse.json({ error: "Processing error" }, { status: 500 });
   }
 }
