@@ -3,6 +3,7 @@ import type { AssistenciaTecnicaLeadOutput } from "@/server/validators/assistenc
 import type { LeadFinancialsInput } from "@/server/validators/lead-financials.schema";
 import type { AssistenciaTecnicaLead, LeadStatus, StatusPagamento } from "@/generated/prisma/client";
 import { buildStatusCountMap } from "./shared/status-count";
+import { buildFinancialSummary, type FinancialSummary } from "./shared/financial-summary";
 
 export function createAssistenciaTecnicaLead(
   data: AssistenciaTecnicaLeadOutput
@@ -13,11 +14,31 @@ export function createAssistenciaTecnicaLead(
   });
 }
 
-export function listAssistenciaTecnicaLeads(status?: LeadStatus): Promise<AssistenciaTecnicaLead[]> {
+export function listAssistenciaTecnicaLeads(
+  status?: LeadStatus,
+  pagination?: { skip: number; take: number }
+): Promise<AssistenciaTecnicaLead[]> {
   return prisma.assistenciaTecnicaLead.findMany({
     where: status ? { status } : undefined,
     orderBy: { createdAt: "desc" },
+    skip: pagination?.skip,
+    take: pagination?.take,
   });
+}
+
+export function countAssistenciaTecnicaLeads(status?: LeadStatus): Promise<number> {
+  return prisma.assistenciaTecnicaLead.count({ where: status ? { status } : undefined });
+}
+
+export async function sumAssistenciaTecnicaLeadFinancials(
+  status?: LeadStatus
+): Promise<FinancialSummary> {
+  const groups = await prisma.assistenciaTecnicaLead.groupBy({
+    by: ["statusPagamento"],
+    where: status ? { status } : undefined,
+    _sum: { valorServico: true },
+  });
+  return buildFinancialSummary(groups);
 }
 
 export function getAssistenciaTecnicaLeadById(id: string): Promise<AssistenciaTecnicaLead | null> {

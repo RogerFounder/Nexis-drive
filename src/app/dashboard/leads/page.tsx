@@ -1,7 +1,15 @@
 import Link from "next/link";
 import { getActiveVertical } from "@/config/verticals";
-import { listAssistenciaTecnicaLeads } from "@/server/db/repositories/assistencia-tecnica-lead.repository";
-import { listEsteticaMotorLeads } from "@/server/db/repositories/estetica-motor-lead.repository";
+import {
+  listAssistenciaTecnicaLeads,
+  countAssistenciaTecnicaLeads,
+  sumAssistenciaTecnicaLeadFinancials,
+} from "@/server/db/repositories/assistencia-tecnica-lead.repository";
+import {
+  listEsteticaMotorLeads,
+  countEsteticaMotorLeads,
+  sumEsteticaMotorLeadFinancials,
+} from "@/server/db/repositories/estetica-motor-lead.repository";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { LeadStatusSelect } from "@/components/shared/dashboard/leads/lead-status-select";
 import { LeadPaymentStatusSelect } from "@/components/shared/dashboard/leads/lead-payment-status-select";
@@ -30,6 +38,8 @@ const DATE_FORMATTER = new Intl.DateTimeFormat("pt-BR", {
   minute: "2-digit",
 });
 
+const PAGE_SIZE = 20;
+
 interface LeadCardData {
   id: string;
   nome: string;
@@ -47,19 +57,38 @@ function isLeadStatus(value: string | undefined): value is LeadStatus {
   return value === "NOVO" || value === "CONTATADO" || value === "CONVERTIDO" || value === "DESCARTADO";
 }
 
+function parsePage(value: string | undefined): number {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : 1;
+}
+
 export default async function DashboardLeadsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string }>;
+  searchParams: Promise<{ status?: string; page?: string }>;
 }) {
-  const { status: statusParam } = await searchParams;
+  const { status: statusParam, page: pageParam } = await searchParams;
   const status = isLeadStatus(statusParam) ? statusParam : undefined;
+  const page = parsePage(pageParam);
   const vertical = getActiveVertical();
-  const laudoIdByLeadId = await listLatestLaudoIdByLeadId(vertical);
+  const pagination = { skip: (page - 1) * PAGE_SIZE, take: PAGE_SIZE };
+
+  const [laudoIdByLeadId, totalCount, financialSummary] =
+    vertical === "assistencia"
+      ? await Promise.all([
+          listLatestLaudoIdByLeadId(vertical),
+          countAssistenciaTecnicaLeads(status),
+          sumAssistenciaTecnicaLeadFinancials(status),
+        ])
+      : await Promise.all([
+          listLatestLaudoIdByLeadId(vertical),
+          countEsteticaMotorLeads(status),
+          sumEsteticaMotorLeadFinancials(status),
+        ]);
 
   const leads: LeadCardData[] =
     vertical === "assistencia"
-      ? (await listAssistenciaTecnicaLeads(status)).map((lead) => ({
+      ? (await listAssistenciaTecnicaLeads(status, pagination)).map((lead) => ({
           id: lead.id,
           nome: lead.nome,
           whatsapp: lead.whatsapp,
@@ -71,7 +100,7 @@ export default async function DashboardLeadsPage({
           valorServico: lead.valorServico ? Number(lead.valorServico) : null,
           statusPagamento: lead.statusPagamento,
         }))
-      : (await listEsteticaMotorLeads(status)).map((lead) => ({
+      : (await listEsteticaMotorLeads(status, pagination)).map((lead) => ({
           id: lead.id,
           nome: lead.nome,
           whatsapp: lead.whatsapp,
@@ -84,16 +113,8 @@ export default async function DashboardLeadsPage({
           statusPagamento: lead.statusPagamento,
         }));
 
-  // Computed from the leads already fetched above for this view (respects
-  // the active status filter) — not a separate aggregate query. Zero/null
-  // values never count toward either total.
-  const totalRecebido = leads
-    .filter((lead) => lead.statusPagamento === "PAGO" && lead.valorServico)
-    .reduce((sum, lead) => sum + (lead.valorServico as number), 0);
-
-  const totalEmAberto = leads
-    .filter((lead) => lead.statusPagamento === "PENDENTE" && lead.valorServico)
-    .reduce((sum, lead) => sum + (lead.valorServico as number), 0);
+  const { totalRecebido, totalEmAberto } = financialSummary;
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   return (
     <div className="flex flex-col gap-6">
@@ -102,12 +123,12 @@ export default async function DashboardLeadsPage({
           Leads
         </h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          {leads.length} {leads.length === 1 ? "lead encontrado" : "leads encontrados"}
+          {totalCount} {totalCount === 1 ? "lead encontrado" : "leads encontrados"}
         </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatCard label="Volume de leads" value={leads.length} tone="emphasis" />
+        <StatCard label="Volume de leads" value={totalCount} tone="emphasis" />
         <StatCard label="Total recebido" value={formatCurrencyBRL(totalRecebido)} tone="success" />
         <StatCard label="Total em aberto" value={formatCurrencyBRL(totalEmAberto)} tone="warning" />
       </div>
@@ -211,6 +232,59 @@ export default async function DashboardLeadsPage({
           ))}
         </div>
       )}
+
+      {totalPages > 1 && (
+        <nav className="flex items-center justify-between gap-3 pt-2">
+          <PageLink
+            page={page - 1}
+            status={status}
+            disabled={page <= 1}
+            label="← Anterior"
+          />
+          <span className="text-sm text-zinc-400 dark:text-zinc-500">
+            Página {page} de {totalPages}
+          </span>
+          <PageLink
+            page={page + 1}
+            status={status}
+            disabled={page >= totalPages}
+            label="Próxima →"
+          />
+        </nav>
+      )}
     </div>
+  );
+}
+
+function PageLink({
+  page,
+  status,
+  disabled,
+  label,
+}: {
+  page: number;
+  status?: LeadStatus;
+  disabled: boolean;
+  label: string;
+}) {
+  if (disabled) {
+    return (
+      <span className="cursor-not-allowed rounded-full px-3.5 py-1.5 text-sm font-medium text-zinc-300 dark:text-zinc-700">
+        {label}
+      </span>
+    );
+  }
+
+  const params = new URLSearchParams();
+  if (status) params.set("status", status);
+  params.set("page", String(page));
+
+  return (
+    <Link
+      href={`/dashboard/leads?${params.toString()}`}
+      className="rounded-full px-3.5 py-1.5 text-sm font-medium text-zinc-600 ring-1 ring-zinc-200 transition-colors duration-150 hover:bg-zinc-100 dark:text-zinc-400 dark:ring-zinc-700 dark:hover:bg-zinc-800"
+    >
+      {label}
+    </Link>
   );
 }

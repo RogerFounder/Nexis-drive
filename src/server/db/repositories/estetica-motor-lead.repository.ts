@@ -3,6 +3,7 @@ import type { EsteticaMotoresLeadOutput } from "@/server/validators/estetica-mot
 import type { LeadFinancialsInput } from "@/server/validators/lead-financials.schema";
 import type { EsteticaMotorLead, LeadStatus, StatusPagamento } from "@/generated/prisma/client";
 import { buildStatusCountMap } from "./shared/status-count";
+import { buildFinancialSummary, type FinancialSummary } from "./shared/financial-summary";
 
 export function createEsteticaMotorLead(
   data: EsteticaMotoresLeadOutput
@@ -13,11 +14,29 @@ export function createEsteticaMotorLead(
   });
 }
 
-export function listEsteticaMotorLeads(status?: LeadStatus): Promise<EsteticaMotorLead[]> {
+export function listEsteticaMotorLeads(
+  status?: LeadStatus,
+  pagination?: { skip: number; take: number }
+): Promise<EsteticaMotorLead[]> {
   return prisma.esteticaMotorLead.findMany({
     where: status ? { status } : undefined,
     orderBy: { createdAt: "desc" },
+    skip: pagination?.skip,
+    take: pagination?.take,
   });
+}
+
+export function countEsteticaMotorLeads(status?: LeadStatus): Promise<number> {
+  return prisma.esteticaMotorLead.count({ where: status ? { status } : undefined });
+}
+
+export async function sumEsteticaMotorLeadFinancials(status?: LeadStatus): Promise<FinancialSummary> {
+  const groups = await prisma.esteticaMotorLead.groupBy({
+    by: ["statusPagamento"],
+    where: status ? { status } : undefined,
+    _sum: { valorServico: true },
+  });
+  return buildFinancialSummary(groups);
 }
 
 export function getEsteticaMotorLeadById(id: string): Promise<EsteticaMotorLead | null> {
