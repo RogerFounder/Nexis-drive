@@ -15,15 +15,18 @@ export default async function Home() {
   const highlights = VERTICAL_HIGHLIGHTS[vertical];
 
   return (
-    <div className="flex flex-1 flex-col bg-zinc-50 dark:bg-zinc-950 lg:grid lg:grid-cols-2">
-      <aside
+    <div className="relative flex flex-1 flex-col overflow-hidden bg-zinc-950">
+      <div
         aria-hidden
-        className="relative hidden overflow-hidden bg-zinc-950 lg:flex lg:flex-col lg:justify-center lg:gap-10 lg:px-16 lg:py-20"
-      >
-        <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl" />
-        <div className="pointer-events-none absolute -right-16 -bottom-16 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl" />
+        className="pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-24 -bottom-24 h-[28rem] w-[28rem] rounded-full bg-emerald-500/10 blur-3xl"
+      />
 
-        <div className="relative z-10 flex max-w-md flex-col gap-6">
+      <div className="relative z-10 flex flex-1 flex-col lg:grid lg:grid-cols-2 lg:items-center lg:gap-12 lg:px-16">
+        <div className="hidden lg:flex lg:max-w-md lg:flex-col lg:gap-6">
           <h1 className="text-5xl font-semibold tracking-tight text-zinc-50">Nexus Drive</h1>
           <p className="text-lg leading-relaxed text-zinc-400">{tagline}</p>
 
@@ -38,22 +41,20 @@ export default async function Home() {
             ))}
           </ul>
         </div>
-      </aside>
 
-      <main className="mx-auto flex w-full max-w-lg flex-1 flex-col gap-16 px-6 py-20 sm:py-28 lg:max-w-none lg:items-center lg:justify-center lg:px-16 lg:py-20">
-        <header className="mx-auto max-w-lg text-center lg:hidden">
-          <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl dark:text-zinc-50">
-            Nexus Drive
-          </h1>
-          <p className="mt-4 text-lg leading-relaxed text-zinc-500 dark:text-zinc-400">
-            {tagline}
-          </p>
-        </header>
+        <main className="mx-auto flex w-full max-w-lg flex-1 flex-col gap-16 px-6 py-20 sm:py-28 lg:max-w-none lg:px-0 lg:py-20">
+          <header className="mx-auto max-w-lg text-center lg:hidden">
+            <h1 className="text-4xl font-semibold tracking-tight text-zinc-50 sm:text-5xl">
+              Nexus Drive
+            </h1>
+            <p className="mt-4 text-lg leading-relaxed text-zinc-400">{tagline}</p>
+          </header>
 
-        <div className="mx-auto w-full max-w-lg">
-          {vertical === "assistencia" ? <AssistenciaForm /> : <EsteticaForm settings={settings} />}
-        </div>
-      </main>
+          <div className="mx-auto w-full max-w-lg">
+            {vertical === "assistencia" ? <AssistenciaForm /> : <EsteticaForm settings={settings} />}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
