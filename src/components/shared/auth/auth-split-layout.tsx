@@ -8,36 +8,37 @@ interface AuthSplitLayoutProps {
 
 /**
  * Shared shell for every standalone auth-adjacent page (login, esqueci-senha,
- * redefinir-senha, assinatura): a branded dark panel on lg+ screens so the
- * page doesn't collapse into a tiny card in a huge empty void, falling back
- * to the original stacked layout below lg.
+ * redefinir-senha, assinatura): one continuous dark, glowing backdrop (always
+ * dark — this is the brand identity of the auth flow, not tied to system
+ * light/dark preference) with the branding copy and the form card floating
+ * on top of it, side by side on lg+ screens. No boxed-in "panel" — the glow
+ * bleeds across the whole viewport instead of being clipped to one half.
  */
 export function AuthSplitLayout({ heading, tagline, children }: AuthSplitLayoutProps) {
   return (
-    <div className="flex flex-1 flex-col bg-zinc-50 dark:bg-zinc-950 lg:grid lg:grid-cols-2">
-      <aside
+    <div className="relative flex flex-1 flex-col overflow-hidden bg-zinc-950">
+      <div
         aria-hidden
-        className="relative hidden overflow-hidden bg-zinc-950 lg:flex lg:flex-col lg:justify-center lg:gap-4 lg:px-16 lg:py-20"
-      >
-        <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl" />
-        <div className="pointer-events-none absolute -right-16 -bottom-16 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl" />
+        className="pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-24 -bottom-24 h-[28rem] w-[28rem] rounded-full bg-emerald-500/10 blur-3xl"
+      />
 
-        <div className="relative z-10 flex max-w-md flex-col gap-4">
+      <div className="relative z-10 flex flex-1 flex-col lg:grid lg:grid-cols-2 lg:items-center lg:gap-12 lg:px-16">
+        <div className="hidden lg:flex lg:max-w-md lg:flex-col lg:gap-4">
           <h1 className="text-4xl font-semibold tracking-tight text-zinc-50">{heading}</h1>
           <p className="text-lg leading-relaxed text-zinc-400">{tagline}</p>
         </div>
-      </aside>
 
-      <div className="flex flex-1 flex-col items-center justify-center px-6 py-20 lg:py-0">
-        <div className="mb-10 text-center lg:hidden">
-          <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-            {heading}
-          </h1>
-          <p className="mt-2 max-w-sm text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
-            {tagline}
-          </p>
+        <div className="flex flex-1 flex-col items-center justify-center px-6 py-20 lg:px-0 lg:py-0">
+          <div className="mb-10 text-center lg:hidden">
+            <h1 className="text-3xl font-semibold tracking-tight text-zinc-50">{heading}</h1>
+            <p className="mt-2 max-w-sm text-sm leading-relaxed text-zinc-400">{tagline}</p>
+          </div>
+          {children}
         </div>
-        {children}
       </div>
     </div>
   );
