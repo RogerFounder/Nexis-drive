@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ResetPasswordForm } from "@/components/shared/auth/reset-password-form";
+import { AuthSplitLayout } from "@/components/shared/auth/auth-split-layout";
 
 export default async function RedefinirSenhaPage({
   searchParams,
@@ -10,31 +11,23 @@ export default async function RedefinirSenhaPage({
 
   if (!token) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-4 bg-zinc-50 px-6 py-20 text-center dark:bg-zinc-950">
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-          Link inválido
-        </h1>
-        <p className="max-w-sm text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
-          Este link de redefinição está incompleto ou já foi usado.
-        </p>
+      <AuthSplitLayout
+        heading="Link inválido"
+        tagline="Este link de redefinição está incompleto ou já foi usado."
+      >
         <Link
           href="/esqueci-senha"
-          className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition-[transform,opacity] duration-150 hover:opacity-90 active:scale-[0.98] dark:bg-white dark:text-zinc-900"
+          className="inline-flex items-center gap-1.5 rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition-[transform,opacity] duration-150 hover:opacity-90 active:scale-[0.98] dark:bg-white dark:text-zinc-900"
         >
           Solicitar novo link
         </Link>
-      </div>
+      </AuthSplitLayout>
     );
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center bg-zinc-50 px-6 py-20 dark:bg-zinc-950">
-      <div className="mb-10 text-center">
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-          Escolha uma nova senha
-        </h1>
-      </div>
+    <AuthSplitLayout heading="Escolha uma nova senha" tagline="Defina uma senha nova para sua conta.">
       <ResetPasswordForm token={token} />
-    </div>
+    </AuthSplitLayout>
   );
 }
