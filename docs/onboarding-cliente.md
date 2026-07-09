@@ -87,6 +87,21 @@ npx tsx scripts/set-trial-days.ts
 Não mexe em senha nem reaplica migrations — só ajusta esse número. Pode rodar a
 qualquer momento, inclusive depois que o cliente já está usando o painel.
 
+## 7. Cliente com pagamento único (sem passar pelo Asaas)
+
+Pros primeiros clientes com cobrança avulsa (ex: PIX recebido diretamente, sem
+assinatura recorrente no Asaas), libera o acesso manualmente:
+
+```bash
+DATABASE_URL="<pooled do cliente>" \
+ADMIN_EMAIL="dono@clientexyz.com" \
+npx tsx scripts/activate-lifetime-access.ts
+```
+
+Isso marca o acesso como pago (`ACTIVE`) sem data de expiração — não depende do
+Asaas nem de webhook nenhum. Se quiser um prazo em vez de permanente, adicione
+`ACCESS_UNTIL="2027-12-31"` ao comando.
+
 ## Erros conhecidos desse processo
 
 - **Build falha com `VERTENTE_ATIVA inválida`**: o valor tem que ser exatamente
