@@ -15,7 +15,7 @@ export function PrivacyConsentCheckbox({ id, name, error }: PrivacyConsentCheckb
     <div className="flex flex-col gap-1.5">
       <label
         htmlFor={id}
-        className="flex cursor-pointer items-start gap-2.5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400"
+        className="flex cursor-pointer items-start gap-2.5 text-sm leading-relaxed text-zinc-400"
       >
         <input
           type="checkbox"
@@ -23,7 +23,7 @@ export function PrivacyConsentCheckbox({ id, name, error }: PrivacyConsentCheckb
           name={name}
           aria-invalid={errorMessage ? true : undefined}
           aria-describedby={errorId}
-          className="mt-0.5 h-4 w-4 shrink-0 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900/20 dark:border-zinc-600 dark:text-zinc-100"
+          className="mt-0.5 h-4 w-4 shrink-0 rounded border-zinc-600 text-zinc-100 focus:ring-zinc-100/20"
         />
         <span>
           Li e concordo com a{" "}
@@ -31,7 +31,7 @@ export function PrivacyConsentCheckbox({ id, name, error }: PrivacyConsentCheckb
             href="/privacidade"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-zinc-900 underline underline-offset-2 dark:text-zinc-100"
+            className="font-medium text-zinc-100 underline underline-offset-2"
           >
             Política de Privacidade
           </Link>

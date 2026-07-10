@@ -55,7 +55,7 @@ export function LoginForm({ redirectTo, resetSuccess }: LoginFormProps) {
 
         <Link
           href="/esqueci-senha"
-          className="text-center text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
+          className="text-center text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-100"
         >
           Esqueci minha senha
         </Link>

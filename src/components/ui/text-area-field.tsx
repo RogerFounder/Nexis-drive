@@ -70,7 +70,7 @@ export function TextAreaField({
         {showCounter && maxLength && (
           <span
             id={counterId}
-            className="shrink-0 text-xs tabular-nums text-zinc-400 dark:text-zinc-500"
+            className="shrink-0 text-xs tabular-nums text-zinc-500"
           >
             {length}/{maxLength}
           </span>

@@ -6,10 +6,8 @@ interface FormAlertProps {
 }
 
 const VARIANT_STYLES: Record<FormAlertProps["variant"], string> = {
-  success:
-    "bg-emerald-50 text-emerald-800 ring-1 ring-emerald-600/10 dark:bg-emerald-500/10 dark:text-emerald-300 dark:ring-emerald-400/20",
-  error:
-    "bg-red-50 text-red-700 ring-1 ring-red-600/10 dark:bg-red-500/10 dark:text-red-300 dark:ring-red-400/20",
+  success: "bg-emerald-500/10 text-emerald-300 ring-1 ring-emerald-400/20",
+  error: "bg-red-500/10 text-red-300 ring-1 ring-red-400/20",
 };
 
 function AlertIcon({ variant }: { variant: FormAlertProps["variant"] }) {

@@ -29,10 +29,10 @@ export function AssistenciaTecnicaLeadForm() {
     <FormCard>
       <form ref={formRef} action={formAction} noValidate className="flex flex-col gap-6">
         <header>
-          <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+          <h2 className="text-2xl font-semibold tracking-tight text-zinc-50">
             Assistência Técnica Premium
           </h2>
-          <p className="mt-1.5 text-[15px] leading-relaxed text-zinc-500 dark:text-zinc-400">
+          <p className="mt-1.5 text-[15px] leading-relaxed text-zinc-400">
             Conte o que aconteceu com o seu aparelho — respondemos pelo WhatsApp em poucos
             minutos.
           </p>

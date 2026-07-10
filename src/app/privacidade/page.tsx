@@ -6,25 +6,23 @@ export const metadata = {
 
 export default function PrivacidadePage() {
   return (
-    <div className="flex flex-1 flex-col bg-zinc-50 px-6 py-16 dark:bg-zinc-950">
+    <div className="flex flex-1 flex-col bg-zinc-950 px-6 py-16">
       <div className="mx-auto w-full max-w-2xl">
         <Link
           href="/"
-          className="text-sm text-zinc-400 transition-colors duration-150 hover:text-zinc-600 dark:hover:text-zinc-300"
+          className="text-sm text-zinc-500 transition-colors duration-150 hover:text-zinc-300"
         >
           ← Voltar
         </Link>
 
-        <h1 className="mt-4 text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+        <h1 className="mt-4 text-3xl font-semibold tracking-tight text-zinc-50">
           Política de Privacidade
         </h1>
-        <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-          Última atualização: 07 de julho de 2026
-        </p>
+        <p className="mt-2 text-sm text-zinc-400">Última atualização: 07 de julho de 2026</p>
 
-        <div className="mt-10 flex flex-col gap-8 text-[15px] leading-relaxed text-zinc-600 dark:text-zinc-300">
+        <div className="mt-10 flex flex-col gap-8 text-[15px] leading-relaxed text-zinc-300">
           <section>
-            <h2 className="mb-2 text-base font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="mb-2 text-base font-semibold text-zinc-50">
               1. Quem trata os seus dados
             </h2>
             <p>
@@ -36,7 +34,7 @@ export default function PrivacidadePage() {
           </section>
 
           <section>
-            <h2 className="mb-2 text-base font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="mb-2 text-base font-semibold text-zinc-50">
               2. Quais dados coletamos
             </h2>
             <p>Ao preencher o formulário de solicitação, coletamos:</p>
@@ -56,7 +54,7 @@ export default function PrivacidadePage() {
           </section>
 
           <section>
-            <h2 className="mb-2 text-base font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="mb-2 text-base font-semibold text-zinc-50">
               3. Para que usamos esses dados
             </h2>
             <p>
@@ -68,7 +66,7 @@ export default function PrivacidadePage() {
           </section>
 
           <section>
-            <h2 className="mb-2 text-base font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="mb-2 text-base font-semibold text-zinc-50">
               4. Base legal
             </h2>
             <p>
@@ -80,7 +78,7 @@ export default function PrivacidadePage() {
           </section>
 
           <section>
-            <h2 className="mb-2 text-base font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="mb-2 text-base font-semibold text-zinc-50">
               5. Compartilhamento
             </h2>
             <p>
@@ -92,7 +90,7 @@ export default function PrivacidadePage() {
           </section>
 
           <section>
-            <h2 className="mb-2 text-base font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="mb-2 text-base font-semibold text-zinc-50">
               6. Por quanto tempo guardamos seus dados
             </h2>
             <p>
@@ -102,7 +100,7 @@ export default function PrivacidadePage() {
           </section>
 
           <section>
-            <h2 className="mb-2 text-base font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="mb-2 text-base font-semibold text-zinc-50">
               7. Seus direitos e como exercê-los
             </h2>
             <p>
@@ -115,7 +113,7 @@ export default function PrivacidadePage() {
           </section>
 
           <section>
-            <h2 className="mb-2 text-base font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="mb-2 text-base font-semibold text-zinc-50">
               8. Segurança
             </h2>
             <p>
@@ -126,7 +124,7 @@ export default function PrivacidadePage() {
           </section>
 
           <section>
-            <h2 className="mb-2 text-base font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="mb-2 text-base font-semibold text-zinc-50">
               9. Alterações desta política
             </h2>
             <p>

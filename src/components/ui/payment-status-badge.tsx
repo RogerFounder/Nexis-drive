@@ -6,9 +6,8 @@ export const PAYMENT_STATUS_LABELS: Record<StatusPagamento, string> = {
 };
 
 const PAYMENT_STATUS_STYLES: Record<StatusPagamento, string> = {
-  PENDENTE:
-    "bg-amber-50 text-amber-700 ring-1 ring-amber-600/10 dark:bg-amber-500/10 dark:text-amber-300 dark:ring-amber-400/20",
-  PAGO: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/10 dark:bg-emerald-500/10 dark:text-emerald-300 dark:ring-emerald-400/20",
+  PENDENTE: "bg-amber-500/10 text-amber-300 ring-1 ring-amber-400/20",
+  PAGO: "bg-emerald-500/10 text-emerald-300 ring-1 ring-emerald-400/20",
 };
 
 export function PaymentStatusBadge({ status }: { status: StatusPagamento }) {

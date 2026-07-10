@@ -34,28 +34,24 @@ export default async function LaudoDocumentPage({
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
         <Link
           href="/dashboard/laudo"
-          className="text-sm text-zinc-400 transition-colors duration-150 hover:text-zinc-600 dark:hover:text-zinc-300"
+          className="text-sm text-zinc-500 transition-colors duration-150 hover:text-zinc-300"
         >
           ← Todos os laudos
         </Link>
         <LaudoActionsBar whatsappSummary={whatsappSummary} laudoId={laudo.id} />
       </div>
 
-      <div className="rounded-3xl border border-zinc-200 bg-white p-8 sm:p-10 print:rounded-none print:border-none print:p-0 dark:border-zinc-800 dark:bg-zinc-900">
-        <header className="flex items-start justify-between border-b border-zinc-200 pb-6 dark:border-zinc-800 print:border-zinc-300">
+      <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-8 sm:p-10 print:rounded-none print:border-none print:bg-white print:p-0">
+        <header className="flex items-start justify-between border-b border-zinc-800 pb-6 print:border-zinc-300">
           <div>
-            <p className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 print:text-black">
+            <p className="text-lg font-semibold tracking-tight text-zinc-50 print:text-black">
               Nexus Drive
             </p>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 print:text-zinc-600">
-              Laudo Técnico de Entrada
-            </p>
+            <p className="text-sm text-zinc-400 print:text-zinc-600">Laudo Técnico de Entrada</p>
           </div>
           <div className="text-right">
-            <p className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 print:text-black">
-              Nº {laudo.numero}
-            </p>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 print:text-zinc-600">
+            <p className="text-lg font-semibold text-zinc-50 print:text-black">Nº {laudo.numero}</p>
+            <p className="text-sm text-zinc-400 print:text-zinc-600">
               {DATE_FORMATTER.format(laudo.createdAt)}
             </p>
           </div>
@@ -74,9 +70,9 @@ export default async function LaudoDocumentPage({
               {laudo.itensChecklist.map((item) => (
                 <li
                   key={item}
-                  className="flex items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300 print:text-black"
+                  className="flex items-center gap-2 text-sm text-zinc-300 print:text-black"
                 >
-                  <span aria-hidden className="text-zinc-400">
+                  <span aria-hidden className="text-zinc-500 print:text-zinc-400">
                     ✓
                   </span>
                   {item}
@@ -84,7 +80,7 @@ export default async function LaudoDocumentPage({
               ))}
             </ul>
           ) : (
-            <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400 print:text-zinc-600">
+            <p className="mt-3 text-sm text-zinc-400 print:text-zinc-600">
               Nenhuma avaria visível registrada na entrada.
             </p>
           )}
@@ -92,21 +88,23 @@ export default async function LaudoDocumentPage({
 
         <section className="mt-6">
           <SectionTitle>Observações</SectionTitle>
-          <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-zinc-700 dark:text-zinc-300 print:text-black">
+          <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-zinc-300 print:text-black">
             {laudo.observacoesEntrada}
           </p>
         </section>
 
-        <section className="mt-8 rounded-2xl bg-zinc-50 p-5 dark:bg-zinc-800/60 print:rounded-none print:border print:border-zinc-300 print:bg-white">
+        <section className="mt-8 rounded-2xl bg-zinc-800/60 p-5 print:rounded-none print:border print:border-zinc-300 print:bg-white">
           <SectionTitle>Garantia e Termos de Responsabilidade</SectionTitle>
-          <p className="mt-3 whitespace-pre-line text-xs leading-relaxed text-zinc-500 dark:text-zinc-400 print:text-zinc-700">
+          <p className="mt-3 whitespace-pre-line text-xs leading-relaxed text-zinc-400 print:text-zinc-700">
             {warrantyText}
           </p>
         </section>
 
-        <section className="mt-12 grid grid-cols-1 gap-10 pt-6 text-center text-xs text-zinc-400 sm:grid-cols-2 print:text-zinc-500">
-          <div className="border-t border-zinc-300 pt-2">Técnico Responsável</div>
-          <div className="border-t border-zinc-300 pt-2">{laudo.clienteNome} (Cliente)</div>
+        <section className="mt-12 grid grid-cols-1 gap-10 pt-6 text-center text-xs text-zinc-500 sm:grid-cols-2 print:text-zinc-500">
+          <div className="border-t border-zinc-800 pt-2 print:border-zinc-300">Técnico Responsável</div>
+          <div className="border-t border-zinc-800 pt-2 print:border-zinc-300">
+            {laudo.clienteNome} (Cliente)
+          </div>
         </section>
       </div>
     </div>
@@ -116,12 +114,10 @@ export default async function LaudoDocumentPage({
 function Field({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-xs font-medium tracking-wide text-zinc-400 uppercase print:text-zinc-500">
+      <p className="text-xs font-medium tracking-wide text-zinc-500 uppercase print:text-zinc-500">
         {label}
       </p>
-      <p className="mt-0.5 text-sm font-medium text-zinc-900 dark:text-zinc-50 print:text-black">
-        {value}
-      </p>
+      <p className="mt-0.5 text-sm font-medium text-zinc-50 print:text-black">{value}</p>
     </div>
   );
 }

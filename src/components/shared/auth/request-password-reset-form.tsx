@@ -26,7 +26,7 @@ export function RequestPasswordResetForm() {
           </FormAlert>
           <Link
             href="/login"
-            className="text-center text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
+            className="text-center text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-100"
           >
             Voltar ao login
           </Link>
@@ -50,7 +50,7 @@ export function RequestPasswordResetForm() {
 
           <Link
             href="/login"
-            className="text-center text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
+            className="text-center text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-100"
           >
             Voltar ao login
           </Link>

@@ -23,20 +23,20 @@ export function LaudoIntakeForm({ leadId, checklistItems }: LaudoIntakeFormProps
       {state.formError && <FormAlert variant="error">{state.formError}</FormAlert>}
 
       <div className="flex flex-col gap-3">
-        <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <p className="text-sm font-medium text-zinc-300">
           Condições de entrada (marque o que se aplica)
         </p>
         <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
           {checklistItems.map((item) => (
             <label
               key={item}
-              className="flex cursor-pointer items-start gap-2.5 rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-3 text-sm text-zinc-700 transition-colors duration-150 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              className="flex cursor-pointer items-start gap-2.5 rounded-xl border border-zinc-700 bg-zinc-800/50 px-3.5 py-3 text-sm text-zinc-300 transition-colors duration-150 hover:bg-zinc-800"
             >
               <input
                 type="checkbox"
                 name="itensChecklist"
                 value={item}
-                className="mt-0.5 h-4 w-4 shrink-0 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900/20 dark:border-zinc-600 dark:text-zinc-100"
+                className="mt-0.5 h-4 w-4 shrink-0 rounded border-zinc-600 text-zinc-100 focus:ring-zinc-100/20"
               />
               <span>{item}</span>
             </label>

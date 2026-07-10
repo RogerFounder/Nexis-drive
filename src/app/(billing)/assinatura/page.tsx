@@ -24,15 +24,11 @@ export default async function AssinaturaPage() {
       <FormCard>
         <div className="flex flex-col gap-6">
           <div className="flex items-baseline justify-between">
-            <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Plano mensal
-            </span>
-            <span className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-              Nexus Drive
-            </span>
+            <span className="text-sm font-medium text-zinc-300">Plano mensal</span>
+            <span className="text-2xl font-semibold tracking-tight text-zinc-50">Nexus Drive</span>
           </div>
 
-          <ul className="flex flex-col gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+          <ul className="flex flex-col gap-2 text-sm text-zinc-400">
             <li className="flex items-center gap-2">
               <span aria-hidden className="text-emerald-500">✓</span> Captura ilimitada de leads
             </li>
@@ -47,12 +43,12 @@ export default async function AssinaturaPage() {
           {CHECKOUT_URL ? (
             <a
               href={CHECKOUT_URL}
-              className="flex w-full items-center justify-center rounded-full bg-zinc-900 px-6 py-3.5 text-[15px] font-medium text-white transition-[transform,opacity] duration-150 hover:opacity-90 active:scale-[0.98] dark:bg-white dark:text-zinc-900"
+              className="flex w-full items-center justify-center rounded-full bg-white px-6 py-3.5 text-[15px] font-medium text-zinc-900 transition-[transform,opacity] duration-150 hover:opacity-90 active:scale-[0.98]"
             >
               Assinar via Asaas
             </a>
           ) : (
-            <p className="rounded-xl bg-zinc-100 px-4 py-3 text-center text-xs leading-relaxed text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+            <p className="rounded-xl bg-zinc-800 px-4 py-3 text-center text-xs leading-relaxed text-zinc-400">
               O link de pagamento ainda não foi configurado. Defina{" "}
               <code className="font-mono">ASAAS_CHECKOUT_URL</code> no ambiente para habilitar a
               assinatura.
@@ -65,7 +61,7 @@ export default async function AssinaturaPage() {
         {!expired && (
           <Link
             href="/dashboard"
-            className="font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
+            className="font-medium text-zinc-500 transition-colors hover:text-zinc-100"
           >
             Voltar ao painel
           </Link>
@@ -73,7 +69,7 @@ export default async function AssinaturaPage() {
         <form action={logoutAction}>
           <button
             type="submit"
-            className="font-medium text-zinc-400 transition-colors hover:text-zinc-700 dark:hover:text-zinc-200"
+            className="font-medium text-zinc-400 transition-colors hover:text-zinc-200"
           >
             Sair
           </button>

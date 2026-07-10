@@ -42,12 +42,8 @@ export default async function DashboardOverviewPage() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-          Visão geral
-        </h1>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          Vertente ativa: {verticalLabel}
-        </p>
+        <h1 className="text-2xl font-semibold tracking-tight text-zinc-50">Visão geral</h1>
+        <p className="mt-1 text-sm text-zinc-400">Vertente ativa: {verticalLabel}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">

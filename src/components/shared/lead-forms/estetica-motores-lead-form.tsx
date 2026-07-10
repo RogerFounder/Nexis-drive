@@ -38,10 +38,8 @@ export function EsteticaMotoresLeadForm({ motorServiceMode }: EsteticaMotoresLea
     <FormCard>
       <form ref={formRef} action={formAction} noValidate className="flex flex-col gap-6">
         <header>
-          <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-            {heading}
-          </h2>
-          <p className="mt-1.5 text-[15px] leading-relaxed text-zinc-500 dark:text-zinc-400">
+          <h2 className="text-2xl font-semibold tracking-tight text-zinc-50">{heading}</h2>
+          <p className="mt-1.5 text-[15px] leading-relaxed text-zinc-400">
             Diga o que o seu veículo precisa — montamos um orçamento e falamos com você pelo
             WhatsApp.
           </p>

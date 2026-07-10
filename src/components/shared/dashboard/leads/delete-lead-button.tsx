@@ -16,11 +16,9 @@ export function DeleteLeadButton({ leadId, leadNome }: DeleteLeadButtonProps) {
   const [state, formAction] = useActionState(boundAction, INITIAL_STATE);
 
   return (
-    <div className="rounded-2xl border border-red-200 bg-red-50/50 p-6 dark:border-red-500/20 dark:bg-red-500/5">
-      <h2 className="text-sm font-semibold text-red-900 dark:text-red-300">
-        Excluir dados deste cliente
-      </h2>
-      <p className="mt-1.5 text-sm leading-relaxed text-red-800/80 dark:text-red-300/70">
+    <div className="rounded-2xl border border-red-500/20 bg-red-500/5 p-6">
+      <h2 className="text-sm font-semibold text-red-300">Excluir dados deste cliente</h2>
+      <p className="mt-1.5 text-sm leading-relaxed text-red-300/70">
         Use isso para atender a um pedido de exclusão de dados (LGPD). Remove permanentemente o
         lead de {leadNome} e qualquer laudo técnico associado — não pode ser desfeito.
       </p>
@@ -40,7 +38,7 @@ export function DeleteLeadButton({ leadId, leadNome }: DeleteLeadButtonProps) {
       >
         <button
           type="submit"
-          className="rounded-full border border-red-300 px-4 py-2 text-sm font-medium text-red-700 transition-colors duration-150 hover:bg-red-100 dark:border-red-500/40 dark:text-red-300 dark:hover:bg-red-500/10"
+          className="rounded-full border border-red-500/40 px-4 py-2 text-sm font-medium text-red-300 transition-colors duration-150 hover:bg-red-500/10"
         >
           Excluir dados permanentemente
         </button>

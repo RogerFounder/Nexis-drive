@@ -40,7 +40,7 @@ export function LeadStatusSelect({ vertical, leadId, currentStatus }: LeadStatus
         defaultValue={currentStatus}
         disabled={isPending}
         onChange={handleChange}
-        className="rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-xs font-medium text-zinc-700 outline-none transition-[opacity,border-color] duration-150 focus:border-zinc-900 disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:focus:border-zinc-100"
+        className="rounded-lg border border-zinc-700 bg-zinc-800 px-2.5 py-1.5 text-xs font-medium text-zinc-200 outline-none transition-[opacity,border-color] duration-150 focus:border-zinc-100 disabled:opacity-50"
       >
         {STATUS_OPTIONS.map((status) => (
           <option key={status} value={status}>
@@ -49,7 +49,7 @@ export function LeadStatusSelect({ vertical, leadId, currentStatus }: LeadStatus
         ))}
       </select>
       {error && (
-        <p role="alert" className="animate-field-message text-xs font-medium text-red-600 dark:text-red-400">
+        <p role="alert" className="animate-field-message text-xs font-medium text-red-400">
           {error}
         </p>
       )}

@@ -27,7 +27,7 @@ export function MobileNav({ email }: MobileNavProps) {
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-label={open ? "Fechar menu" : "Abrir menu"}
-        className="-m-2 flex h-9 w-9 items-center justify-center rounded-lg text-zinc-500 transition-colors duration-150 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+        className="-m-2 flex h-9 w-9 items-center justify-center rounded-lg text-zinc-400 transition-colors duration-150 hover:bg-zinc-800"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="h-5 w-5">
           {open ? (
@@ -39,7 +39,7 @@ export function MobileNav({ email }: MobileNavProps) {
       </button>
 
       {open && (
-        <nav className="animate-field-message absolute inset-x-0 top-full z-10 border-b border-zinc-200 bg-white px-6 py-4 shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
+        <nav className="animate-field-message absolute inset-x-0 top-full z-10 border-b border-zinc-800 bg-zinc-900 px-6 py-4 shadow-lg">
           <ul className="flex flex-col gap-1">
             {NAV_LINKS.map((link) => {
               const isActive = pathname === link.href;
@@ -50,8 +50,8 @@ export function MobileNav({ email }: MobileNavProps) {
                     onClick={() => setOpen(false)}
                     className={`block rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-150 ${
                       isActive
-                        ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
-                        : "text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-800/60"
+                        ? "bg-zinc-800 text-zinc-50"
+                        : "text-zinc-400 hover:bg-zinc-800/60"
                     }`}
                   >
                     {link.label}
@@ -60,12 +60,12 @@ export function MobileNav({ email }: MobileNavProps) {
               );
             })}
           </ul>
-          <div className="mt-3 flex items-center justify-between border-t border-zinc-100 pt-3 dark:border-zinc-800">
-            <span className="text-xs text-zinc-400 dark:text-zinc-500">{email}</span>
+          <div className="mt-3 flex items-center justify-between border-t border-zinc-800 pt-3">
+            <span className="text-xs text-zinc-500">{email}</span>
             <form action={logoutAction}>
               <button
                 type="submit"
-                className="text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
+                className="text-sm font-medium text-zinc-400 transition-colors hover:text-zinc-100"
               >
                 Sair
               </button>

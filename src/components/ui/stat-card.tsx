@@ -11,24 +11,24 @@ const TONE_STYLES: Record<
   { card: string; value: string; label: string }
 > = {
   neutral: {
-    card: "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900",
-    value: "text-zinc-900 dark:text-zinc-50",
-    label: "text-zinc-500 dark:text-zinc-400",
+    card: "border-zinc-800 bg-zinc-900",
+    value: "text-zinc-50",
+    label: "text-zinc-400",
   },
   emphasis: {
-    card: "border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100",
-    value: "text-white dark:text-zinc-900",
-    label: "text-zinc-300 dark:text-zinc-600",
+    card: "border-zinc-100 bg-zinc-100",
+    value: "text-zinc-900",
+    label: "text-zinc-600",
   },
   success: {
-    card: "border-emerald-200 bg-emerald-50 dark:border-emerald-500/20 dark:bg-emerald-500/10",
-    value: "text-emerald-900 dark:text-emerald-300",
-    label: "text-emerald-700/70 dark:text-emerald-400/70",
+    card: "border-emerald-500/20 bg-emerald-500/10",
+    value: "text-emerald-300",
+    label: "text-emerald-400",
   },
   warning: {
-    card: "border-amber-200 bg-amber-50 dark:border-amber-500/20 dark:bg-amber-500/10",
-    value: "text-amber-900 dark:text-amber-300",
-    label: "text-amber-700/70 dark:text-amber-400/70",
+    card: "border-amber-500/20 bg-amber-500/10",
+    value: "text-amber-300",
+    label: "text-amber-400",
   },
 };
 

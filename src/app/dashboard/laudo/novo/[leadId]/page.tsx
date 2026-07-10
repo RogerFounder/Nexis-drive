@@ -44,19 +44,19 @@ export default async function NovoLaudoPage({
       <div>
         <Link
           href="/dashboard/leads"
-          className="text-sm text-zinc-400 transition-colors duration-150 hover:text-zinc-600 dark:hover:text-zinc-300"
+          className="text-sm text-zinc-500 transition-colors duration-150 hover:text-zinc-300"
         >
           ← Voltar para Leads
         </Link>
-        <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+        <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-50">
           Novo Laudo Técnico
         </h1>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-1 text-sm text-zinc-400">
           {nome} · {identificadorLabel}: {identificadorValor}
         </p>
       </div>
 
-      <div className="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
         <LaudoIntakeForm leadId={leadId} checklistItems={checklistItems} />
       </div>
     </div>

@@ -16,9 +16,9 @@ export function SubmitButton({ children, pendingLabel }: SubmitButtonProps) {
     <button
       type="submit"
       disabled={pending}
-      className="flex w-full items-center justify-center gap-2 rounded-full bg-zinc-900 px-6 py-3.5 text-[15px] font-medium text-white transition-[transform,opacity] duration-150 ease-out hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-zinc-900"
+      className="flex w-full items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-[15px] font-medium text-zinc-900 transition-[transform,opacity] duration-150 ease-out hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
     >
-      {pending && <Spinner tone="onDark" />}
+      {pending && <Spinner tone="onLight" />}
       {pending ? pendingLabel : children}
     </button>
   );

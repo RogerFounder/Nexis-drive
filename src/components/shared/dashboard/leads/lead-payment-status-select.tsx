@@ -10,9 +10,8 @@ import { PAYMENT_STATUS_LABELS } from "@/components/ui/payment-status-badge";
 const PAYMENT_STATUS_OPTIONS: readonly StatusPagamento[] = ["PENDENTE", "PAGO"];
 
 const TONE_CLASSES: Record<StatusPagamento, string> = {
-  PENDENTE:
-    "border-amber-200 bg-amber-50 text-amber-700 focus:border-amber-500 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300",
-  PAGO: "border-emerald-200 bg-emerald-50 text-emerald-700 focus:border-emerald-500 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300",
+  PENDENTE: "border-amber-500/30 bg-amber-500/10 text-amber-300 focus:border-amber-500",
+  PAGO: "border-emerald-500/30 bg-emerald-500/10 text-emerald-300 focus:border-emerald-500",
 };
 
 interface LeadPaymentStatusSelectProps {
@@ -59,7 +58,7 @@ export function LeadPaymentStatusSelect({
         ))}
       </select>
       {error && (
-        <p role="alert" className="animate-field-message text-xs font-medium text-red-600 dark:text-red-400">
+        <p role="alert" className="animate-field-message text-xs font-medium text-red-400">
           {error}
         </p>
       )}
