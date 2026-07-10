@@ -5,6 +5,7 @@ import {
   MOTOR_MODE_TAGLINE,
 } from "@/config/verticals";
 import { getDeploymentSettings } from "@/server/db/repositories/settings.repository";
+import { BackgroundMotif } from "@/components/shared/background-motif";
 
 export default async function Home() {
   const vertical = getActiveVertical();
@@ -24,6 +25,7 @@ export default async function Home() {
         aria-hidden
         className="animate-glow-b pointer-events-none absolute -right-24 -bottom-24 h-[28rem] w-[28rem] rounded-full bg-emerald-500/10 blur-3xl"
       />
+      <BackgroundMotif vertical={vertical} />
 
       <main className="relative z-10 mx-auto flex w-full max-w-lg flex-1 flex-col items-center gap-12 px-6 py-20 sm:py-28">
         <header className="max-w-lg text-center">

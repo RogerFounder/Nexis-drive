@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { BackgroundMotif } from "@/components/shared/background-motif";
+import { getActiveVertical } from "@/config/verticals";
 
 interface AuthSplitLayoutProps {
   heading: ReactNode;
@@ -15,6 +17,8 @@ interface AuthSplitLayoutProps {
  * presence instead of a second column.
  */
 export function AuthSplitLayout({ heading, tagline, children }: AuthSplitLayoutProps) {
+  const vertical = getActiveVertical();
+
   return (
     <div className="relative flex flex-1 flex-col items-center justify-center overflow-hidden bg-zinc-950 px-6 py-20">
       <div
@@ -25,6 +29,7 @@ export function AuthSplitLayout({ heading, tagline, children }: AuthSplitLayoutP
         aria-hidden
         className="animate-glow-b pointer-events-none absolute -right-24 -bottom-24 h-[28rem] w-[28rem] rounded-full bg-emerald-500/10 blur-3xl"
       />
+      <BackgroundMotif vertical={vertical} />
 
       <div className="relative z-10 flex w-full flex-col items-center">
         <div className="mb-10 max-w-md text-center">

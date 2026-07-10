@@ -84,9 +84,27 @@ body {
   animation: glow-drift-b 12s ease-in-out infinite;
 }
 
+/* Faint vertical-specific illustration drifting behind the landing and auth
+   pages — brand texture, not decoration meant to be noticed. It travels a
+   wide, slow arc toward the upper-left and back. */
+@keyframes motif-float {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translate(0, 0) rotate(-1deg);
+  }
+  50% {
+    transform: translate(-50%, -50%) translate(-110px, -70px) rotate(1deg);
+  }
+}
+
+.animate-motif-float {
+  animation: motif-float 32s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-glow-a,
-  .animate-glow-b {
+  .animate-glow-b,
+  .animate-motif-float {
     animation: none;
   }
 }
