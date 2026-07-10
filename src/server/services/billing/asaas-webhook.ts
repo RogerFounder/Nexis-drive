@@ -6,6 +6,9 @@ import {
   getSoleSubscription,
   upsertSubscriptionForAdmin,
 } from "@/server/db/repositories/subscription.repository";
+import { isEventForThisDeployment } from "./asaas-webhook-guard";
+
+export { isEventForThisDeployment } from "./asaas-webhook-guard";
 
 /**
  * Maps Asaas event names to our subscription status. Events not listed are
@@ -52,11 +55,7 @@ export function verifyAsaasToken(received: string | null): boolean {
 
 export type WebhookOutcome = "APPLIED" | "IGNORED" | "NO_SUBSCRIPTION";
 
-/**
- * Applies a verified Asaas event to our single-tenant subscription. Resolves
- * the target subscription by Asaas customer id when available, otherwise
- * falls back to the sole subscription row (single-admin deployment).
- */
+/** Applies a verified Asaas event to our single-tenant subscription. */
 export async function applyAsaasWebhook(payload: AsaasWebhookPayload): Promise<WebhookOutcome> {
   const event = payload.event;
   if (!event || !(event in EVENT_STATUS_MAP)) return "IGNORED";
@@ -67,11 +66,17 @@ export async function applyAsaasWebhook(payload: AsaasWebhookPayload): Promise<W
   const nextDueDate = payload.payment?.nextDueDate ?? payload.subscription?.nextDueDate ?? null;
   const currentPeriodEnd = nextDueDate ? new Date(nextDueDate) : null;
 
+  const expectedCustomerId = process.env.ASAAS_CUSTOMER_ID;
+  if (!isEventForThisDeployment(customerId, expectedCustomerId)) return "IGNORED";
+
   const existing = customerId
     ? await getSubscriptionByAsaasCustomerId(customerId)
-    : await getSoleSubscription();
+    : expectedCustomerId
+      ? null
+      : await getSoleSubscription();
 
-  const adminId = existing?.adminId ?? (await prisma.admin.findFirst())?.id ?? null;
+  const adminId =
+    existing?.adminId ?? (expectedCustomerId ? null : (await prisma.admin.findFirst())?.id) ?? null;
   if (!adminId) return "NO_SUBSCRIPTION";
 
   await upsertSubscriptionForAdmin({
