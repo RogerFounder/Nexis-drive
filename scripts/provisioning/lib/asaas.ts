@@ -83,6 +83,34 @@ export async function createAsaasSubscription(
   return { subscriptionId: body.id, invoiceUrl: payments.data[0].invoiceUrl };
 }
 
+interface CreateSinglePaymentInput {
+  customerId: string;
+  value: number;
+  description: string;
+  /** Due date, "YYYY-MM-DD". Defaults to today if omitted. */
+  dueDate?: string;
+}
+
+/** One-off, non-recurring charge — used for lifetime/founder-price deals. */
+export async function createAsaasSinglePayment(
+  input: CreateSinglePaymentInput
+): Promise<{ paymentId: string; invoiceUrl: string }> {
+  const dueDate = input.dueDate ?? new Date().toISOString().slice(0, 10);
+
+  const body = (await asaasFetch("/payments", {
+    method: "POST",
+    body: JSON.stringify({
+      customer: input.customerId,
+      billingType: "UNDEFINED",
+      value: input.value,
+      dueDate,
+      description: input.description,
+    }),
+  })) as { id: string; invoiceUrl: string };
+
+  return { paymentId: body.id, invoiceUrl: body.invoiceUrl };
+}
+
 const WEBHOOK_EVENTS = [
   "PAYMENT_CONFIRMED",
   "PAYMENT_RECEIVED",

@@ -6,8 +6,9 @@ oficina/estética automotiva) no modelo atual: **um deployment isolado por clien
 
 ## Caminho automático (recomendado) — 1 comando, ~2 min
 
-Validado ponta a ponta em 2026-07-10 (criou e apagou um cliente de teste real via API:
-banco Neon, projeto Vercel com deploy, cliente + assinatura + webhook no Asaas).
+Validado ponta a ponta em 2026-07-10 (criou e apagou dois clientes de teste reais via
+API — um no plano mensal recorrente, outro no plano vitalício fundador — banco Neon,
+projeto Vercel com deploy, cliente + cobrança + webhook no Asaas).
 
 ### Configuração única (só na primeira vez)
 
@@ -23,7 +24,7 @@ ASAAS_API_KEY=""       # asaas.com → Integrações → Chaves de API → Gerar
                         # antes de liberar; e NÃO marque permissão de saque na chave)
 ```
 
-### Rodando pra cada cliente novo
+### Rodando pra cada cliente novo — plano mensal (cliente #11 em diante)
 
 ```bash
 CLIENT_SLUG="oficina-do-joao" \
@@ -32,9 +33,32 @@ VERTENTE_ATIVA="estetica" \
 ADMIN_EMAIL="joao@oficinadojoao.com" \
 ADMIN_PASSWORD="SenhaForte123!" \
 ASAAS_CLIENT_CPF_CNPJ="12345678900" \
-ASAAS_SUBSCRIPTION_VALUE="97.00" \
+ASAAS_SUBSCRIPTION_VALUE="147.00" \
 npx tsx scripts/provisioning/new-client.ts
 ```
+
+### Rodando pra cada cliente novo — plano fundador vitalício (só os 10 primeiros)
+
+Igual ao de cima, mas troca `ASAAS_SUBSCRIPTION_VALUE` por `FOUNDER_LIFETIME_PRICE`
+(nunca os dois juntos):
+
+```bash
+CLIENT_SLUG="oficina-do-joao" \
+CLIENT_NAME="Oficina do João" \
+VERTENTE_ATIVA="estetica" \
+ADMIN_EMAIL="joao@oficinadojoao.com" \
+ADMIN_PASSWORD="SenhaForte123!" \
+ASAAS_CLIENT_CPF_CNPJ="12345678900" \
+FOUNDER_LIFETIME_PRICE="297.00" \
+npx tsx scripts/provisioning/new-client.ts
+```
+
+Diferença: cobrança **única** no Asaas (não recorrente) e o acesso já é marcado
+como `ACTIVE`/permanente direto no banco, no momento do provisionamento — não
+depende do webhook confirmar o pagamento pra liberar (mais resistente a falha:
+mesmo se o pagamento atrasar ou o webhook tiver problema, o fundador já está com
+acesso). **Controle manual de quantos vagas de fundador já foram usadas** — o
+script não impõe limite de 10, isso é combinado com você mesmo antes de rodar.
 
 - `CLIENT_SLUG`: vira o nome do projeto Vercel e o subdomínio
   (`https://<slug>.vercel.app`) — só letras minúsculas, números e hífen.
@@ -42,7 +66,8 @@ npx tsx scripts/provisioning/new-client.ts
   distinção estética/oficina/ambos é feita depois, dentro do painel).
 - `ASAAS_CLIENT_CPF_CNPJ`: CPF ou CNPJ do cliente (só dígitos ou formatado, o script
   limpa a formatação) — exigido pelo Asaas pra criar o cliente.
-- `ADMIN_TRIAL_DAYS` (opcional, padrão 7): dias de trial pra esse cliente específico.
+- `ADMIN_TRIAL_DAYS` (opcional, padrão 7): dias de trial pra esse cliente específico
+  — só relevante no plano mensal (fundador já entra com acesso ativo, sem trial).
 
 O script faz, nessa ordem, com rollback automático se algum passo falhar
 (apaga o que já criou nesta execução — exceto o cliente Asaas, ver nota abaixo):
