@@ -62,6 +62,14 @@ function parsePage(value: string | undefined): number {
   return Number.isInteger(parsed) && parsed > 0 ? parsed : 1;
 }
 
+// Includes the price up front when it's already known — the customer can
+// just confirm instead of the shop having to type out a quote by hand.
+function buildLeadWhatsAppMessage(nome: string, itemLabel: string, valorServico: number | null): string {
+  const base = `Olá ${nome}! Vi sua solicitação sobre o ${itemLabel} aqui no Nexus Drive.`;
+  if (valorServico === null) return `${base} Podemos conversar sobre o serviço?`;
+  return `${base} O valor do serviço fica em ${formatCurrencyBRL(valorServico)}. Podemos seguir?`;
+}
+
 export default async function DashboardLeadsPage({
   searchParams,
 }: {
@@ -88,30 +96,36 @@ export default async function DashboardLeadsPage({
 
   const leads: LeadCardData[] =
     vertical === "assistencia"
-      ? (await listAssistenciaTecnicaLeads(status, pagination)).map((lead) => ({
-          id: lead.id,
-          nome: lead.nome,
-          whatsapp: lead.whatsapp,
-          createdAt: lead.createdAt,
-          status: lead.status,
-          identifierLabel: "Dispositivo",
-          identifierValue: lead.modeloDispositivo,
-          whatsappMessage: `Olá ${lead.nome}! Vi sua solicitação sobre o ${lead.modeloDispositivo} aqui no Nexus Drive. Podemos conversar sobre o reparo?`,
-          valorServico: lead.valorServico ? Number(lead.valorServico) : null,
-          statusPagamento: lead.statusPagamento,
-        }))
-      : (await listEsteticaMotorLeads(status, pagination)).map((lead) => ({
-          id: lead.id,
-          nome: lead.nome,
-          whatsapp: lead.whatsapp,
-          createdAt: lead.createdAt,
-          status: lead.status,
-          identifierLabel: "Veículo",
-          identifierValue: lead.veiculo,
-          whatsappMessage: `Olá ${lead.nome}! Vi sua solicitação sobre o ${lead.veiculo} aqui no Nexus Drive. Vamos falar sobre o serviço?`,
-          valorServico: lead.valorServico ? Number(lead.valorServico) : null,
-          statusPagamento: lead.statusPagamento,
-        }));
+      ? (await listAssistenciaTecnicaLeads(status, pagination)).map((lead) => {
+          const valorServico = lead.valorServico ? Number(lead.valorServico) : null;
+          return {
+            id: lead.id,
+            nome: lead.nome,
+            whatsapp: lead.whatsapp,
+            createdAt: lead.createdAt,
+            status: lead.status,
+            identifierLabel: "Dispositivo",
+            identifierValue: lead.modeloDispositivo,
+            whatsappMessage: buildLeadWhatsAppMessage(lead.nome, lead.modeloDispositivo, valorServico),
+            valorServico,
+            statusPagamento: lead.statusPagamento,
+          };
+        })
+      : (await listEsteticaMotorLeads(status, pagination)).map((lead) => {
+          const valorServico = lead.valorServico ? Number(lead.valorServico) : null;
+          return {
+            id: lead.id,
+            nome: lead.nome,
+            whatsapp: lead.whatsapp,
+            createdAt: lead.createdAt,
+            status: lead.status,
+            identifierLabel: "Veículo",
+            identifierValue: lead.veiculo,
+            whatsappMessage: buildLeadWhatsAppMessage(lead.nome, lead.veiculo, valorServico),
+            valorServico,
+            statusPagamento: lead.statusPagamento,
+          };
+        });
 
   const { totalRecebido, totalEmAberto } = financialSummary;
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
