@@ -43,7 +43,7 @@ export function LeadStatusSelect({ vertical, leadId, currentStatus }: LeadStatus
         className="rounded-lg border border-zinc-700 bg-zinc-800 px-2.5 py-1.5 text-xs font-medium text-zinc-200 outline-none transition-[opacity,border-color] duration-150 focus:border-zinc-100 disabled:opacity-50"
       >
         {STATUS_OPTIONS.map((status) => (
-          <option key={status} value={status}>
+          <option key={status} value={status} className="bg-zinc-900 text-zinc-100">
             {STATUS_LABELS[status]}
           </option>
         ))}

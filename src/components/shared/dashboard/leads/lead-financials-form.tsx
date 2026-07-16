@@ -58,7 +58,7 @@ export function LeadFinancialsForm({
           className={getFieldControlClassName(Boolean(state.fieldErrors?.statusPagamento))}
         >
           {PAYMENT_STATUS_OPTIONS.map((status) => (
-            <option key={status} value={status}>
+            <option key={status} value={status} className="bg-zinc-900 text-zinc-100">
               {PAYMENT_STATUS_LABELS[status]}
             </option>
           ))}

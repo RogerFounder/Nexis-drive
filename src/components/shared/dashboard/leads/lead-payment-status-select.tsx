@@ -52,7 +52,7 @@ export function LeadPaymentStatusSelect({
         className={`shrink-0 rounded-full border px-2.5 py-1 text-xs font-semibold outline-none transition-[opacity,border-color] duration-150 disabled:opacity-50 ${TONE_CLASSES[currentStatus]}`}
       >
         {PAYMENT_STATUS_OPTIONS.map((status) => (
-          <option key={status} value={status}>
+          <option key={status} value={status} className="bg-zinc-900 text-zinc-100">
             {PAYMENT_STATUS_LABELS[status]}
           </option>
         ))}
