@@ -9,17 +9,17 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   const { email, access } = await requireDashboardAccess();
 
   return (
-    <div className="relative flex min-h-full flex-1 flex-col overflow-hidden bg-zinc-950">
+    <div className="relative flex min-h-full flex-1 flex-col overflow-hidden bg-zinc-950 print:bg-white">
       <div
         aria-hidden
-        className="pointer-events-none fixed -top-32 -left-32 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl"
+        className="pointer-events-none fixed -top-32 -left-32 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl print:hidden"
       />
       <div
         aria-hidden
-        className="pointer-events-none fixed -right-32 -bottom-32 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl"
+        className="pointer-events-none fixed -right-32 -bottom-32 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl print:hidden"
       />
 
-      <header className="relative z-10 border-b border-zinc-800 bg-zinc-900/70 backdrop-blur-sm">
+      <header className="relative z-10 border-b border-zinc-800 bg-zinc-900/70 backdrop-blur-sm print:hidden">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4">
           <span className="text-sm font-semibold tracking-tight text-zinc-50">
             Nexus Drive <span className="font-normal text-zinc-500">· Painel</span>
@@ -52,8 +52,14 @@ export default async function DashboardLayout({ children }: { children: ReactNod
           <MobileNav email={email} />
         </div>
       </header>
-      {access.reason === "TRIAL" && <TrialBanner daysRemaining={access.trialDaysRemaining} />}
-      <main className="relative z-10 mx-auto w-full max-w-5xl flex-1 px-6 py-10">{children}</main>
+      {access.reason === "TRIAL" && (
+        <div className="print:hidden">
+          <TrialBanner daysRemaining={access.trialDaysRemaining} />
+        </div>
+      )}
+      <main className="relative z-10 mx-auto w-full max-w-5xl flex-1 px-6 py-10 print:p-0">
+        {children}
+      </main>
     </div>
   );
 }
