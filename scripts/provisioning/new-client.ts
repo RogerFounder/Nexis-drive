@@ -165,7 +165,7 @@ async function main() {
     vercelProjectId = vercel.projectId;
     const deploymentDomain = `${clientSlug}.vercel.app`;
 
-    await setVercelEnvVars(vercel.projectId, {
+    const envVars: Record<string, string> = {
       VERTENTE_ATIVA: vertente,
       DATABASE_URL: neon.databaseUrl,
       DIRECT_URL: neon.directUrl,
@@ -173,7 +173,20 @@ async function main() {
       ASAAS_WEBHOOK_TOKEN: asaasWebhookToken,
       ASAAS_CHECKOUT_URL: invoiceUrl,
       ASAAS_CUSTOMER_ID: customerId,
-    });
+    };
+
+    // Wires this client's own "novo lead" email notification automatically —
+    // their login email doubles as the notification address, no extra input
+    // needed per client. Skipped only if Resend isn't configured for this
+    // provisioning run (existing clients created before this stayed unwired).
+    const resendApiKey = process.env.RESEND_API_KEY?.trim();
+    if (resendApiKey) {
+      envVars.RESEND_API_KEY = resendApiKey;
+      envVars.LEAD_NOTIFICATION_EMAIL_FROM = "onboarding@resend.dev";
+      envVars.LEAD_NOTIFICATION_EMAIL_TO = adminEmail;
+    }
+
+    await setVercelEnvVars(vercel.projectId, envVars);
 
     await createAsaasWebhook(
       `Nexus Drive — ${clientName}`,

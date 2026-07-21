@@ -22,6 +22,9 @@ NEON_ORG_ID=""         # GET /users/me/organizations com a key acima, campo "id"
 ASAAS_API_KEY=""       # asaas.com → Integrações → Chaves de API → Gerar chave de API
                         # (exige "Minha Conta" → aba Informações → faturamento preenchido
                         # antes de liberar; e NÃO marque permissão de saque na chave)
+RESEND_API_KEY=""      # resend.com → API Keys. Opcional: sem isso, o cliente novo é
+                        # provisionado normalmente, só sem o aviso automático por e-mail
+                        # de "lead novo" (ADMIN_EMAIL vira o destinatário automaticamente).
 ```
 
 ### Rodando pra cada cliente novo — plano mensal (cliente #11 em diante)
