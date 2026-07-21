@@ -9,6 +9,7 @@ import {
   createAsaasSinglePayment,
 } from "@/server/services/billing/asaas-client";
 import { createCheckoutSession } from "@/server/db/repositories/checkout-session.repository";
+import { reportError } from "@/server/services/monitoring/report-error";
 
 const schema = z.object({
   ownerName: z.string().min(3, "Informe seu nome completo."),
@@ -79,7 +80,8 @@ export async function initiateCheckoutAction(
       });
       invoiceUrl = result.invoiceUrl;
     }
-  } catch {
+  } catch (error) {
+    reportError("initiate-checkout:asaas", error);
     return {
       success: false,
       formError: "Erro ao iniciar o pagamento. Tente novamente em instantes.",
