@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { headers } from "next/headers";
 import { getActiveVertical, VERTICAL_TAGLINE } from "@/config/verticals";
 import "./globals.css";
 
@@ -18,11 +19,17 @@ export const metadata: Metadata = {
   description: VERTICAL_TAGLINE[getActiveVertical()],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Reading the nonce here (set by the CSP in src/proxy.ts) is what makes
+  // Next.js attach it to its own framework-injected <script> tags — without
+  // this, the strict `script-src 'nonce-...' 'strict-dynamic'` policy
+  // silently blocks every script the app needs to hydrate/become interactive.
+  await headers();
+
   return (
     <html
       lang="en"
