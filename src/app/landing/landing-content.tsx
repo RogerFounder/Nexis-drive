@@ -9,7 +9,7 @@ declare global {
   }
 }
 
-function trackWhatsAppClickLead() {
+function trackLeadClick() {
   window.fbq?.("track", "Lead");
 }
 
@@ -63,7 +63,7 @@ const FAQS = [
   },
   {
     q: "Como eu recebo o acesso depois de pagar?",
-    a: "Hoje a liberação é feita diretamente pela nossa equipe: assim que o pagamento é confirmado, entramos em contato pelo WhatsApp com seu acesso.",
+    a: "Hoje a liberação é feita diretamente pela nossa equipe: assim que o pagamento é confirmado, entramos em contato pelo telefone informado no checkout com seu acesso.",
   },
   {
     q: "A mensalidade aumenta com o tempo?",
@@ -85,8 +85,7 @@ const PLANS = [
     price: "R$ 597",
     priceNote: "uma vez só, sem mensalidade — exclusivo pros 10 primeiros clientes",
     ctaLabel: "Quero o plano vitalício →",
-    whatsappMessage:
-      "Olá! Vim pelo anúncio do Nexus Drive e quero garantir minha vaga de fundador no plano vitalício (R$597, sem mensalidade).",
+    checkoutUrl: "https://www.asaas.com/c/uqsj6wt6gl7ostwt",
     highlight: true,
   },
   {
@@ -95,8 +94,7 @@ const PLANS = [
     price: "R$ 147/mês",
     priceNote: "sem taxa de ativação — cancele quando quiser",
     ctaLabel: "Quero o plano mensal →",
-    whatsappMessage:
-      "Olá! Vim pelo anúncio do Nexus Drive e quero começar no plano mensal (R$147/mês, sem taxa de entrada).",
+    checkoutUrl: "https://www.asaas.com/c/q8ksc6ofgltka04s",
     highlight: false,
   },
 ] as const;
@@ -181,7 +179,7 @@ export function LandingContent({ salesWhatsAppE164 }: LandingContentProps) {
               href={talkWhatsAppLink}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={trackWhatsAppClickLead}
+              onClick={trackLeadClick}
               className="rounded-full border border-zinc-700 px-7 py-3.5 text-zinc-100 transition hover:border-blue-400 active:scale-[0.98]"
             >
               Falar com a equipe no WhatsApp
@@ -316,10 +314,8 @@ export function LandingContent({ salesWhatsAppE164 }: LandingContentProps) {
                   <li>→ Controle financeiro em tempo real</li>
                 </ul>
                 <a
-                  href={buildWhatsAppLink(salesWhatsAppE164, plan.whatsappMessage)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={trackWhatsAppClickLead}
+                  href={plan.checkoutUrl}
+                  onClick={trackLeadClick}
                   className={`block rounded-full px-6 py-3.5 text-center font-semibold transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.98] ${
                     plan.highlight ? "bg-amber-400 text-zinc-950" : "border border-zinc-700 text-zinc-100"
                   }`}
@@ -331,9 +327,9 @@ export function LandingContent({ salesWhatsAppE164 }: LandingContentProps) {
           </div>
 
           <p className="mt-6 max-w-lg text-xs text-zinc-500">
-            Ao clicar em qualquer um dos planos, você fala direto com nossa equipe pelo WhatsApp para confirmar o
-            pagamento e receber o acesso. A mensalidade não aumenta com o tempo. Nesta nova fase, as vagas são
-            limitadas.
+            Ao clicar em qualquer um dos planos, você vai para o pagamento seguro. Depois de confirmado, nossa equipe
+            entra em contato pelo telefone informado no checkout para liberar seu acesso. A mensalidade não aumenta
+            com o tempo. Nesta nova fase, as vagas são limitadas.
           </p>
 
           {/* FAQ */}
