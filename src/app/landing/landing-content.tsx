@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Familjen_Grotesk } from "next/font/google";
 import { buildWhatsAppLink } from "@/lib/whatsapp-link";
+
+// Display face for headings only — scoped to this route so it doesn't
+// touch the dashboard's typography or bundle.
+const familjen = Familjen_Grotesk({ subsets: ["latin"], variable: "--font-familjen" });
 
 declare global {
   interface Window {
@@ -128,7 +133,9 @@ export function LandingContent({ salesWhatsAppE164 }: LandingContentProps) {
   );
 
   return (
-    <div className="relative flex flex-1 flex-col overflow-hidden bg-zinc-950">
+    <div
+      className={`${familjen.variable} relative flex flex-1 flex-col overflow-hidden bg-zinc-950`}
+    >
       <div
         aria-hidden
         className="animate-glow-a pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl"
@@ -139,8 +146,8 @@ export function LandingContent({ salesWhatsAppE164 }: LandingContentProps) {
       />
 
       {/* NAV */}
-      <nav className="relative z-10 flex items-center justify-between px-6 py-6 md:px-16">
-        <span className="text-lg font-semibold tracking-wide text-zinc-50">
+      <nav className="relative z-10 flex items-center justify-between px-6 py-8 md:px-16">
+        <span className="font-[family-name:var(--font-familjen)] text-xl tracking-wide text-zinc-50">
           NEXUS<span className="text-amber-400">·</span>DRIVE
         </span>
         <a
@@ -153,22 +160,23 @@ export function LandingContent({ salesWhatsAppE164 }: LandingContentProps) {
 
       <main className="relative z-10">
         {/* HERO */}
-        <section className="px-6 pt-16 pb-24 md:px-16">
-          <p className="mb-4 font-mono text-xs tracking-[0.15em] text-blue-400">ENTRADA</p>
-          <div className="fade-up mb-5 inline-flex items-center gap-2 rounded-full border border-blue-400/35 bg-blue-500/[0.06] px-4 py-1.5">
+        <section className="px-6 pt-20 pb-32 md:px-16 md:pt-28 md:pb-44">
+          <p className="mb-6 font-mono text-xs tracking-[0.15em] text-blue-400">ENTRADA</p>
+          <div className="fade-up mb-8 inline-flex items-center gap-2 rounded-full border border-blue-400/35 bg-blue-500/[0.06] px-4 py-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
             <span className="font-mono text-xs tracking-wider text-blue-300">
               SISTEMA PARA SERVIÇOS TÉCNICOS — ASSISTÊNCIAS E OFICINAS DE MOTO
             </span>
           </div>
-          <h1 className="fade-up max-w-3xl text-4xl leading-[1.05] font-semibold text-zinc-50 md:text-6xl">
-            O sistema que conecta cada etapa do seu <span className="text-blue-400">crescimento</span> em um único fluxo.
+          <h1 className="fade-up max-w-5xl font-[family-name:var(--font-familjen)] text-6xl leading-[0.95] font-normal tracking-tight text-zinc-50 sm:text-7xl md:text-8xl">
+            O sistema que conecta cada etapa do seu{" "}
+            <span className="text-blue-400">crescimento</span>.
           </h1>
-          <p className="fade-up mt-6 max-w-xl text-lg text-zinc-400">
+          <p className="fade-up mt-8 max-w-xl text-lg text-zinc-400">
             Nexus Drive centraliza seus leads, o contato direto pelo WhatsApp, a geração de laudo e o controle financeiro
             em um único painel — feito para assistências técnicas e oficinas de moto.
           </p>
-          <div className="fade-up mt-9 flex flex-wrap gap-4">
+          <div className="fade-up mt-10 flex flex-wrap gap-4">
             <a
               href="#acesso"
               className="rounded-full bg-amber-400 px-7 py-3.5 font-semibold text-zinc-950 transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.98]"
@@ -188,13 +196,13 @@ export function LandingContent({ salesWhatsAppE164 }: LandingContentProps) {
         </section>
 
         {/* PROBLEMA */}
-        <section className="px-6 py-20 md:px-16">
-          <p className="mb-4 font-mono text-xs tracking-[0.15em] text-blue-400">O PONTO DE PARTIDA</p>
-          <div className="grid gap-8 md:grid-cols-2">
-            <h2 className="fade-up text-2xl leading-snug font-semibold text-zinc-50 md:text-3xl">
+        <section className="px-6 py-24 md:px-16 md:py-36">
+          <p className="mb-6 font-mono text-xs tracking-[0.15em] text-blue-400">O PONTO DE PARTIDA</p>
+          <div className="grid gap-10 md:grid-cols-2">
+            <h2 className="fade-up font-[family-name:var(--font-familjen)] text-4xl leading-[1] font-normal text-zinc-50 md:text-5xl">
               Não é sistema, é menos tempo perdido e menos dor de cabeça.
             </h2>
-            <p className="fade-up leading-relaxed text-zinc-400">
+            <p className="fade-up text-lg leading-relaxed text-zinc-400">
               Curioso que não fecha, cliente que some no meio do atendimento, e aquele que volta meses depois acusando
               você de um problema que já existia antes do serviço. É isso que o Nexus Drive tira do seu caminho.
             </p>
@@ -202,9 +210,9 @@ export function LandingContent({ salesWhatsAppE164 }: LandingContentProps) {
         </section>
 
         {/* COMO FUNCIONA */}
-        <section className="px-6 py-20 md:px-16">
-          <p className="mb-4 font-mono text-xs tracking-[0.15em] text-blue-400">A SOLUÇÃO</p>
-          <h2 className="fade-up mb-8 text-2xl font-semibold text-zinc-50 md:text-3xl">
+        <section className="px-6 py-24 md:px-16 md:py-36">
+          <p className="mb-6 font-mono text-xs tracking-[0.15em] text-blue-400">A SOLUÇÃO</p>
+          <h2 className="fade-up mb-12 font-[family-name:var(--font-familjen)] text-4xl font-normal text-zinc-50 md:text-5xl">
             Menos dor de cabeça no seu dia a dia
           </h2>
 
@@ -228,40 +236,48 @@ export function LandingContent({ salesWhatsAppE164 }: LandingContentProps) {
 
             <div
               ref={tabPanelRef}
-              className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-6 md:p-10"
+              className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-8 md:p-12"
             >
               <p className="mb-3 font-mono text-xs text-blue-400">MÓDULO</p>
-              <h3 className="mb-3 text-xl font-semibold text-zinc-50">{activeTabData.title}</h3>
-              <p className="leading-relaxed text-zinc-400">{activeTabData.body}</p>
+              <h3 className="mb-4 font-[family-name:var(--font-familjen)] text-2xl font-normal text-zinc-50 md:text-3xl">
+                {activeTabData.title}
+              </h3>
+              <p className="text-lg leading-relaxed text-zinc-400">{activeTabData.body}</p>
             </div>
           </div>
         </section>
 
         {/* O QUE VOCÊ RECEBE */}
-        <section className="px-6 py-20 md:px-16">
-          <p className="mb-4 font-mono text-xs tracking-[0.15em] text-blue-400">NOVA FASE</p>
-          <h2 className="fade-up mb-3 text-2xl font-semibold text-zinc-50 md:text-3xl">
+        <section className="px-6 py-24 md:px-16 md:py-36">
+          <p className="mb-6 font-mono text-xs tracking-[0.15em] text-blue-400">NOVA FASE</p>
+          <h2 className="fade-up mb-4 font-[family-name:var(--font-familjen)] text-4xl font-normal text-zinc-50 md:text-5xl">
             Abrimos vagas nesta nova fase
           </h2>
-          <p className="fade-up mb-10 max-w-xl text-zinc-400">
+          <p className="fade-up mb-14 max-w-xl text-lg text-zinc-400">
             O Nexus Drive entrou numa nova fase — e por isso abrimos, neste momento, um número limitado de vagas antes
             do valor voltar ao padrão.
           </p>
 
-          <div className="fade-up grid gap-5 md:grid-cols-3">
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-6">
+          <div className="grid gap-5 md:grid-cols-3">
+            <div className="fade-up rounded-2xl border border-zinc-800 bg-zinc-900/60 p-7">
               <p className="mb-2 font-semibold text-zinc-50">Menos tempo com curioso</p>
               <p className="text-sm text-zinc-400">
                 Veja de cara quem está perto de fechar e pare de gastar energia com quem só queria saber o preço.
               </p>
             </div>
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-6">
+            <div
+              className="fade-up rounded-2xl border border-zinc-800 bg-zinc-900/60 p-7"
+              style={{ transitionDelay: "100ms" }}
+            >
               <p className="mb-2 font-semibold text-zinc-50">Sem acusação injusta depois</p>
               <p className="text-sm text-zinc-400">
                 Laudo registrado na entrada do serviço, pra você não levar a culpa por um problema que já existia antes.
               </p>
             </div>
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-6">
+            <div
+              className="fade-up rounded-2xl border border-zinc-800 bg-zinc-900/60 p-7"
+              style={{ transitionDelay: "200ms" }}
+            >
               <p className="mb-2 font-semibold text-zinc-50">Sem susto no fim do mês</p>
               <p className="text-sm text-zinc-400">
                 Total recebido e total em aberto, sempre visíveis, sem depender de memória ou planilha à parte.
@@ -271,21 +287,24 @@ export function LandingContent({ salesWhatsAppE164 }: LandingContentProps) {
         </section>
 
         {/* ACESSO / CTA FINAL */}
-        <section id="acesso" className="px-6 py-24 md:px-16">
-          <p className="mb-4 font-mono text-xs tracking-[0.15em] text-blue-400">ACESSO</p>
-          <h2 className="fade-up mb-10 text-3xl font-semibold text-zinc-50 md:text-4xl">Entre no Nexus Drive</h2>
+        <section id="acesso" className="px-6 py-24 md:px-16 md:py-36">
+          <p className="mb-6 font-mono text-xs tracking-[0.15em] text-blue-400">ACESSO</p>
+          <h2 className="fade-up mb-12 font-[family-name:var(--font-familjen)] text-4xl font-normal text-zinc-50 md:text-6xl">
+            Entre no Nexus Drive
+          </h2>
 
           <p className="fade-up mb-8 max-w-lg text-sm text-zinc-500">
             NOVA FASE DO NEXUS DRIVE · VAGAS LIMITADAS — escolha o formato que faz mais sentido pro seu momento.
           </p>
 
-          <div className="fade-up grid gap-5 md:grid-cols-2">
-            {PLANS.map((plan) => (
+          <div className="grid gap-5 md:grid-cols-2">
+            {PLANS.map((plan, i) => (
               <div
                 key={plan.id}
-                className={`rounded-2xl border bg-zinc-900/60 p-8 md:p-10 ${
+                className={`fade-up rounded-2xl border bg-zinc-900/60 p-8 md:p-10 ${
                   plan.highlight ? "border-amber-400/40" : "border-zinc-800"
                 }`}
+                style={{ transitionDelay: `${i * 100}ms` }}
               >
                 <p className={`font-mono text-xs ${plan.highlight ? "text-amber-400" : "text-blue-400"}`}>
                   {plan.tag}
@@ -333,8 +352,10 @@ export function LandingContent({ salesWhatsAppE164 }: LandingContentProps) {
           </p>
 
           {/* FAQ */}
-          <div className="fade-up mt-16 max-w-2xl">
-            <h3 className="mb-6 text-xl font-semibold text-zinc-50">Perguntas frequentes</h3>
+          <div className="fade-up mt-20 max-w-2xl">
+            <h3 className="mb-8 font-[family-name:var(--font-familjen)] text-2xl font-normal text-zinc-50">
+              Perguntas frequentes
+            </h3>
             <dl className="space-y-6">
               {FAQS.map((faq) => (
                 <div key={faq.q}>
