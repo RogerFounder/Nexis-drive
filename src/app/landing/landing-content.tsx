@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Familjen_Grotesk } from "next/font/google";
 import { buildWhatsAppLink } from "@/lib/whatsapp-link";
 
@@ -68,7 +69,7 @@ const FAQS = [
   },
   {
     q: "Como eu recebo o acesso depois de pagar?",
-    a: "Hoje a liberação é feita diretamente pela nossa equipe: assim que o pagamento é confirmado, entramos em contato pelo telefone informado no checkout com seu acesso.",
+    a: "Automaticamente. Depois de pagar, você receberá um e-mail com um link para configurar seu painel. O processo leva alguns minutos e não precisa de nenhuma ação da nossa equipe.",
   },
   {
     q: "A mensalidade aumenta com o tempo?",
@@ -90,7 +91,7 @@ const PLANS = [
     price: "R$ 597",
     priceNote: "uma vez só, sem mensalidade — exclusivo pros 10 primeiros clientes",
     ctaLabel: "Quero o plano vitalício →",
-    checkoutUrl: "https://www.asaas.com/c/uqsj6wt6gl7ostwt",
+    checkoutUrl: "/contratar?plano=vitalicio",
     highlight: true,
   },
   {
@@ -99,7 +100,7 @@ const PLANS = [
     price: "R$ 147/mês",
     priceNote: "sem taxa de ativação — cancele quando quiser",
     ctaLabel: "Quero o plano mensal →",
-    checkoutUrl: "https://www.asaas.com/c/q8ksc6ofgltka04s",
+    checkoutUrl: "/contratar?plano=mensal",
     highlight: false,
   },
 ] as const;
@@ -332,7 +333,7 @@ export function LandingContent({ salesWhatsAppE164 }: LandingContentProps) {
                   <li>→ Geração de laudo</li>
                   <li>→ Controle financeiro em tempo real</li>
                 </ul>
-                <a
+                <Link
                   href={plan.checkoutUrl}
                   onClick={trackLeadClick}
                   className={`block rounded-full px-6 py-3.5 text-center font-semibold transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.98] ${
@@ -340,15 +341,15 @@ export function LandingContent({ salesWhatsAppE164 }: LandingContentProps) {
                   }`}
                 >
                   {plan.ctaLabel}
-                </a>
+                </Link>
               </div>
             ))}
           </div>
 
           <p className="mt-6 max-w-lg text-xs text-zinc-500">
-            Ao clicar em qualquer um dos planos, você vai para o pagamento seguro. Depois de confirmado, nossa equipe
-            entra em contato pelo telefone informado no checkout para liberar seu acesso. A mensalidade não aumenta
-            com o tempo. Nesta nova fase, as vagas são limitadas.
+            Ao clicar em qualquer um dos planos, você preenche seus dados e vai para o pagamento seguro. Depois de
+            confirmado, você receberá um e-mail automático com o link de acesso ao seu painel — sem precisar falar
+            com ninguém. A mensalidade não aumenta com o tempo. Nesta nova fase, as vagas são limitadas.
           </p>
 
           {/* FAQ */}

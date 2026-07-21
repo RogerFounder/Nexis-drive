@@ -1,0 +1,78 @@
+name: Provision client
+
+on:
+  workflow_dispatch:
+    inputs:
+      provisioningRequestId:
+        description: "ProvisioningRequest ID (nexus-drive DB)"
+        required: true
+        type: string
+      clientName:
+        description: "Business name (e.g. Oficina do João)"
+        required: true
+        type: string
+      clientSlug:
+        description: "URL slug (e.g. oficina-do-joao)"
+        required: true
+        type: string
+      vertical:
+        description: "assistencia | estetica"
+        required: true
+        type: string
+      adminEmail:
+        description: "Client login email"
+        required: true
+        type: string
+      cpfCnpj:
+        description: "CPF or CNPJ (digits only)"
+        required: true
+        type: string
+      asaasCustomerId:
+        description: "Asaas customer ID (cus_xxx)"
+        required: true
+        type: string
+      asaasSubscriptionId:
+        description: "Asaas subscription ID (sub_xxx)"
+        required: true
+        type: string
+
+jobs:
+  provision:
+    name: Provision ${{ inputs.clientSlug }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run provisioning
+        env:
+          PROVISIONING_REQUEST_ID: ${{ inputs.provisioningRequestId }}
+          CLIENT_SLUG: ${{ inputs.clientSlug }}
+          CLIENT_NAME: ${{ inputs.clientName }}
+          VERTENTE_ATIVA: ${{ inputs.vertical }}
+          ADMIN_EMAIL: ${{ inputs.adminEmail }}
+          ASAAS_CUSTOMER_ID: ${{ inputs.asaasCustomerId }}
+          ASAAS_SUBSCRIPTION_ID: ${{ inputs.asaasSubscriptionId }}
+          # Infrastructure secrets — stored in GitHub repo secrets only,
+          # never in any Vercel project env or committed file.
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_ORG_ID: ${{ secrets.NEON_ORG_ID }}
+          VERCEL_API_TOKEN: ${{ secrets.VERCEL_API_TOKEN }}
+          ASAAS_API_KEY: ${{ secrets.ASAAS_API_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          # Callback — the main nexis-drive site URL + shared secret so
+          # only this workflow can update ProvisioningRequest status.
+          PROVISIONING_CALLBACK_URL: ${{ secrets.PROVISIONING_CALLBACK_URL }}
+          PROVISIONING_CALLBACK_TOKEN: ${{ secrets.PROVISIONING_CALLBACK_TOKEN }}
+        run: npx tsx scripts/provisioning/provision-from-checkout.ts

@@ -6,6 +6,12 @@ import {
   getSoleSubscription,
   upsertSubscriptionForAdmin,
 } from "@/server/db/repositories/subscription.repository";
+import {
+  findCheckoutSessionByCustomerId,
+  findCheckoutSessionByToken,
+  updateCheckoutSessionStatus,
+} from "@/server/db/repositories/checkout-session.repository";
+import { sendWelcomeCheckoutEmail } from "@/server/services/notifications/email-channel";
 import { isEventForThisDeployment } from "./asaas-webhook-guard";
 
 export { isEventForThisDeployment } from "./asaas-webhook-guard";
@@ -31,6 +37,9 @@ export interface AsaasWebhookPayload {
     subscription?: string;
     dueDate?: string;
     nextDueDate?: string;
+    // Token de sessão gravado como externalReference na criação do pagamento —
+    // permite identificar a CheckoutSession sem depender do customerId.
+    externalReference?: string;
   };
   subscription?: {
     id?: string;
@@ -53,7 +62,7 @@ export function verifyAsaasToken(received: string | null): boolean {
   return timingSafeEqual(a, b);
 }
 
-export type WebhookOutcome = "APPLIED" | "IGNORED" | "NO_SUBSCRIPTION";
+export type WebhookOutcome = "APPLIED" | "IGNORED" | "NO_SUBSCRIPTION" | "CHECKOUT_MARKED_PAID";
 
 /** Applies a verified Asaas event to our single-tenant subscription. */
 export async function applyAsaasWebhook(payload: AsaasWebhookPayload): Promise<WebhookOutcome> {
@@ -68,6 +77,28 @@ export async function applyAsaasWebhook(payload: AsaasWebhookPayload): Promise<W
 
   const expectedCustomerId = process.env.ASAAS_CUSTOMER_ID;
   if (!isEventForThisDeployment(customerId, expectedCustomerId)) return "IGNORED";
+
+  // Self-serve checkout: payment confirmed for a prospect who hasn't been
+  // provisioned yet. Look up the session by externalReference (the session
+  // token embedded at payment-creation time) — more reliable than customerId
+  // since it doesn't depend on Asaas's redirect or on ASAAS_CUSTOMER_ID.
+  if (status === "ACTIVE") {
+    const externalRef = payload.payment?.externalReference ?? null;
+    const session = externalRef
+      ? await findCheckoutSessionByToken(externalRef)
+      : customerId
+        ? await findCheckoutSessionByCustomerId(customerId)
+        : null;
+
+    if (session && session.status === "AWAITING_PAYMENT") {
+      await updateCheckoutSessionStatus(session.id, "PAID");
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+      const bemVindoUrl = `${appUrl}/bem-vindo?s=${session.token}`;
+      // Fire-and-forget — a failed email is not worth failing the webhook.
+      sendWelcomeCheckoutEmail(session.email, session.ownerName, bemVindoUrl).catch(() => {});
+      return "CHECKOUT_MARKED_PAID";
+    }
+  }
 
   const existing = customerId
     ? await getSubscriptionByAsaasCustomerId(customerId)

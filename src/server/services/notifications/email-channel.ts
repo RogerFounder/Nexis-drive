@@ -62,6 +62,118 @@ export async function sendEmailNotification(payload: LeadNotificationPayload): P
   }
 }
 
+export async function sendWelcomeCheckoutEmail(
+  to: string,
+  ownerName: string,
+  bemVindoUrl: string
+): Promise<void> {
+  const client = getResendClient();
+  const from = process.env.LEAD_NOTIFICATION_EMAIL_FROM;
+  if (!client || !from) return;
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 480px;">
+      <h2 style="margin:0 0 12px;">Pagamento confirmado, ${escapeHtml(ownerName.split(" ")[0])}!</h2>
+      <p style="color:#444;line-height:1.6;">
+        Recebemos seu pagamento com sucesso. Clique no botão abaixo para preencher
+        as últimas informações e iniciar a configuração do seu painel Nexus Drive.
+      </p>
+      <p style="margin:20px 0;">
+        <a href="${bemVindoUrl}" style="display:inline-block;background:#18181b;color:#fff;padding:12px 24px;border-radius:999px;text-decoration:none;font-weight:600;">
+          Configurar meu painel →
+        </a>
+      </p>
+      <p style="color:#999;font-size:13px;line-height:1.5;">
+        Este link expira em 24 horas. Se tiver qualquer problema, entre em contato com nossa equipe.
+      </p>
+    </div>
+  `;
+
+  const result = await client.emails.send({
+    from,
+    to,
+    subject: "Pagamento confirmado — configure seu painel Nexus Drive",
+    html,
+  });
+
+  if (result.error) {
+    throw new Error(`Falha ao enviar e-mail de boas-vindas via Resend: ${result.error.message}`);
+  }
+}
+
+export async function sendProvisioningStartedEmail(to: string, ownerName: string): Promise<void> {
+  const client = getResendClient();
+  const from = process.env.LEAD_NOTIFICATION_EMAIL_FROM;
+  if (!client || !from) return;
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 480px;">
+      <h2 style="margin:0 0 12px;">Estamos configurando seu ambiente, ${escapeHtml(ownerName.split(" ")[0])}!</h2>
+      <p style="color:#444;line-height:1.6;">
+        Recebemos seu pagamento e já iniciamos a configuração do seu painel Nexus Drive.
+        Esse processo leva alguns minutos — assim que estiver pronto, você receberá um
+        segundo e-mail com o link de acesso e as instruções para definir sua senha.
+      </p>
+      <p style="color:#999;font-size:13px;">Não feche nada, não é necessária nenhuma ação da sua parte agora.</p>
+    </div>
+  `;
+
+  const result = await client.emails.send({
+    from,
+    to,
+    subject: "Configurando seu painel Nexus Drive…",
+    html,
+  });
+
+  if (result.error) {
+    throw new Error(`Falha ao enviar e-mail de provisionamento via Resend: ${result.error.message}`);
+  }
+}
+
+export async function sendActivationEmail(
+  to: string,
+  ownerName: string,
+  dashboardUrl: string,
+  activationUrl: string
+): Promise<void> {
+  const client = getResendClient();
+  const from = process.env.LEAD_NOTIFICATION_EMAIL_FROM;
+  if (!client || !from) return;
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 480px;">
+      <h2 style="margin:0 0 12px;">Seu painel está pronto, ${escapeHtml(ownerName.split(" ")[0])}!</h2>
+      <p style="color:#444;line-height:1.6;">
+        O ambiente do Nexus Drive foi configurado com sucesso. Clique no botão abaixo
+        para definir sua senha e acessar o painel pela primeira vez.
+        Este link expira em 72 horas.
+      </p>
+      <p style="margin:20px 0;">
+        <a href="${activationUrl}" style="display:inline-block;background:#18181b;color:#fff;padding:12px 24px;border-radius:999px;text-decoration:none;font-weight:600;">
+          Ativar minha conta
+        </a>
+      </p>
+      <p style="color:#666;font-size:13px;">
+        Endereço do seu painel: <a href="${escapeHtml(dashboardUrl)}" style="color:#18181b;">${escapeHtml(dashboardUrl)}</a>
+      </p>
+      <p style="color:#999;font-size:13px;line-height:1.5;">
+        Se você não contratou o Nexus Drive, pode ignorar este e-mail com segurança.
+      </p>
+    </div>
+  `;
+
+  const result = await client.emails.send({
+    from,
+    to,
+    subject: "Seu painel Nexus Drive está pronto — ative sua conta",
+    html,
+  });
+
+  if (result.error) {
+    throw new Error(`Falha ao enviar e-mail de ativação via Resend: ${result.error.message}`);
+  }
+}
+
 /**
  * Returns false (rather than throwing) when Resend isn't configured, so the
  * caller can decide how to surface that to the admin requesting a reset.

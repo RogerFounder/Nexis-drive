@@ -156,6 +156,72 @@ model Settings {
   @@map("settings")
 }
 
+// Tracks a prospect's checkout session from pre-payment form → Asaas
+// payment → post-payment form. Token is a random hex secret embedded in
+// the Asaas success redirect URL; expires 24 h after creation so
+// abandoned sessions don't accumulate indefinitely.
+model CheckoutSession {
+  id                  String                @id @default(cuid())
+  token               String                @unique
+  ownerName           String
+  email               String
+  cpfCnpj             String
+  planType            CheckoutPlanType
+  asaasCustomerId     String
+  // Null for one-time (lifetime) payments — only set for recurring subscriptions.
+  asaasSubscriptionId String?
+  invoiceUrl          String
+  status              CheckoutSessionStatus @default(AWAITING_PAYMENT)
+  expiresAt           DateTime
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+
+  provisioningRequest ProvisioningRequest?
+
+  @@index([token])
+  @@map("checkout_sessions")
+}
+
+enum CheckoutPlanType {
+  MENSAL
+  VITALICIO
+}
+
+enum CheckoutSessionStatus {
+  AWAITING_PAYMENT
+  PAID
+  DISPATCHED
+}
+
+// Created when a paid prospect submits the post-payment form. Updated
+// by the callback from the GitHub Actions provisioning workflow.
+model ProvisioningRequest {
+  id                  String             @id @default(cuid())
+  clientName          String
+  clientSlug          String
+  vertical            String
+  adminEmail          String
+  asaasCustomerId     String
+  asaasSubscriptionId String
+  status              ProvisioningStatus @default(PENDING)
+  errorMessage        String?
+  githubRunId         String?
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  checkoutSessionId String?         @unique
+  checkoutSession   CheckoutSession? @relation(fields: [checkoutSessionId], references: [id])
+
+  @@map("provisioning_requests")
+}
+
+enum ProvisioningStatus {
+  PENDING
+  DISPATCHED
+  COMPLETED
+  FAILED
+}
+
 enum SubscriptionStatus {
   TRIALING
   ACTIVE
