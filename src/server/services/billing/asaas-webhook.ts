@@ -12,6 +12,7 @@ import {
   updateCheckoutSessionStatus,
 } from "@/server/db/repositories/checkout-session.repository";
 import { sendWelcomeCheckoutEmail } from "@/server/services/notifications/email-channel";
+import { reportError } from "@/server/services/monitoring/report-error";
 import { isEventForThisDeployment } from "./asaas-webhook-guard";
 
 export { isEventForThisDeployment } from "./asaas-webhook-guard";
@@ -94,8 +95,12 @@ export async function applyAsaasWebhook(payload: AsaasWebhookPayload): Promise<W
       await updateCheckoutSessionStatus(session.id, "PAID");
       const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
       const bemVindoUrl = `${appUrl}/bem-vindo?s=${session.token}`;
-      // Fire-and-forget — a failed email is not worth failing the webhook.
-      sendWelcomeCheckoutEmail(session.email, session.ownerName, bemVindoUrl).catch(() => {});
+      // Fire-and-forget — a failed email is not worth failing the webhook,
+      // but it must still be reported so a silent misconfiguration doesn't
+      // strand a paying customer with no way to finish setup.
+      sendWelcomeCheckoutEmail(session.email, session.ownerName, bemVindoUrl).catch((error) =>
+        reportError("asaas-webhook:welcome-email", error)
+      );
       return "CHECKOUT_MARKED_PAID";
     }
   }

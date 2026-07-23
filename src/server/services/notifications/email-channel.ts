@@ -69,7 +69,13 @@ export async function sendWelcomeCheckoutEmail(
 ): Promise<void> {
   const client = getResendClient();
   const from = process.env.LEAD_NOTIFICATION_EMAIL_FROM;
-  if (!client || !from) return;
+  // Unlike the lead-notification email (genuinely optional), these are the
+  // only way a paying customer finds out how to continue — silently no-op-ing
+  // here would strand them with no error anywhere. Must throw so the caller's
+  // reportError actually fires.
+  if (!client || !from) {
+    throw new Error("RESEND_API_KEY ou LEAD_NOTIFICATION_EMAIL_FROM não configurados.");
+  }
 
   const html = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 480px;">
@@ -104,7 +110,13 @@ export async function sendWelcomeCheckoutEmail(
 export async function sendProvisioningStartedEmail(to: string, ownerName: string): Promise<void> {
   const client = getResendClient();
   const from = process.env.LEAD_NOTIFICATION_EMAIL_FROM;
-  if (!client || !from) return;
+  // Unlike the lead-notification email (genuinely optional), these are the
+  // only way a paying customer finds out how to continue — silently no-op-ing
+  // here would strand them with no error anywhere. Must throw so the caller's
+  // reportError actually fires.
+  if (!client || !from) {
+    throw new Error("RESEND_API_KEY ou LEAD_NOTIFICATION_EMAIL_FROM não configurados.");
+  }
 
   const html = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 480px;">
@@ -138,7 +150,13 @@ export async function sendActivationEmail(
 ): Promise<void> {
   const client = getResendClient();
   const from = process.env.LEAD_NOTIFICATION_EMAIL_FROM;
-  if (!client || !from) return;
+  // Unlike the lead-notification email (genuinely optional), these are the
+  // only way a paying customer finds out how to continue — silently no-op-ing
+  // here would strand them with no error anywhere. Must throw so the caller's
+  // reportError actually fires.
+  if (!client || !from) {
+    throw new Error("RESEND_API_KEY ou LEAD_NOTIFICATION_EMAIL_FROM não configurados.");
+  }
 
   const html = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 480px;">

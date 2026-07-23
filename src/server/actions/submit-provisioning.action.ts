@@ -10,6 +10,7 @@ import {
 import { createProvisioningRequest } from "@/server/db/repositories/provisioning-request.repository";
 import { dispatchProvisioningWorkflow } from "@/server/services/provisioning/github-dispatch";
 import { sendProvisioningStartedEmail } from "@/server/services/notifications/email-channel";
+import { reportError } from "@/server/services/monitoring/report-error";
 
 const schema = z.object({
   sessionToken: z.string().min(1),
@@ -107,7 +108,9 @@ export async function submitProvisioningAction(
     };
   }
 
-  await sendProvisioningStartedEmail(session.email, session.ownerName).catch(() => {});
+  await sendProvisioningStartedEmail(session.email, session.ownerName).catch((error) =>
+    reportError("submit-provisioning:started-email", error)
+  );
 
   redirect("/provisionando");
 }
