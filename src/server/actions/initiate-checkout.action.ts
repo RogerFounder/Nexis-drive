@@ -19,6 +19,11 @@ const schema = z.object({
     .transform((v) => v.replace(/\D/g, ""))
     .pipe(z.string().min(11, "CPF ou CNPJ inválido.").max(14, "CPF ou CNPJ inválido.")),
   planType: z.enum(["MENSAL", "VITALICIO"]),
+  utm_source: z.string().optional(),
+  utm_medium: z.string().optional(),
+  utm_campaign: z.string().optional(),
+  utm_content: z.string().optional(),
+  utm_term: z.string().optional(),
 });
 
 export interface InitiateCheckoutState {
@@ -36,6 +41,11 @@ export async function initiateCheckoutAction(
     email: formData.get("email"),
     cpfCnpj: formData.get("cpfCnpj"),
     planType: formData.get("planType"),
+    utm_source: formData.get("utm_source") || undefined,
+    utm_medium: formData.get("utm_medium") || undefined,
+    utm_campaign: formData.get("utm_campaign") || undefined,
+    utm_content: formData.get("utm_content") || undefined,
+    utm_term: formData.get("utm_term") || undefined,
   });
 
   if (!parsed.success) {
@@ -50,7 +60,17 @@ export async function initiateCheckoutAction(
     };
   }
 
-  const { ownerName, email, cpfCnpj, planType } = parsed.data;
+  const {
+    ownerName,
+    email,
+    cpfCnpj,
+    planType,
+    utm_source: utmSource,
+    utm_medium: utmMedium,
+    utm_campaign: utmCampaign,
+    utm_content: utmContent,
+    utm_term: utmTerm,
+  } = parsed.data;
 
   // Token generated before Asaas call — stored as externalReference in the
   // payment so the webhook can find this session without any redirect URL.
@@ -98,6 +118,11 @@ export async function initiateCheckoutAction(
     asaasSubscriptionId: subscriptionId,
     invoiceUrl,
     expiresAt,
+    utmSource,
+    utmMedium,
+    utmCampaign,
+    utmContent,
+    utmTerm,
   });
 
   redirect(invoiceUrl);

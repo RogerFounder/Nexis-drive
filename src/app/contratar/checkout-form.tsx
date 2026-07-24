@@ -9,21 +9,26 @@ import {
   initiateCheckoutAction,
   type InitiateCheckoutState,
 } from "@/server/actions/initiate-checkout.action";
+import { UTM_PARAM_NAMES, type UtmParams } from "@/lib/utm";
 
 const INITIAL_STATE: InitiateCheckoutState = { success: false };
 
 interface CheckoutFormProps {
   planType: "MENSAL" | "VITALICIO";
   planLabel: string;
+  utm: UtmParams;
 }
 
-export function CheckoutForm({ planType, planLabel }: CheckoutFormProps) {
+export function CheckoutForm({ planType, planLabel, utm }: CheckoutFormProps) {
   const [state, formAction] = useActionState(initiateCheckoutAction, INITIAL_STATE);
 
   return (
     <FormCard>
       <form action={formAction} noValidate className="flex flex-col gap-6">
         <input type="hidden" name="planType" value={planType} />
+        {UTM_PARAM_NAMES.map(
+          (name) => utm[name] && <input key={name} type="hidden" name={name} value={utm[name]} />
+        )}
 
         <div className="rounded-xl border border-zinc-700 bg-zinc-900/60 px-4 py-3">
           <p className="text-xs text-zinc-500">Plano selecionado</p>

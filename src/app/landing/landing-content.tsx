@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Familjen_Grotesk } from "next/font/google";
 import { buildWhatsAppLink } from "@/lib/whatsapp-link";
+import { appendUtmParams, type UtmParams } from "@/lib/utm";
 
 // Display face for headings only — scoped to this route so it doesn't
 // touch the dashboard's typography or bundle.
@@ -21,6 +22,7 @@ function trackLeadClick() {
 
 interface LandingContentProps {
   salesWhatsAppE164: string;
+  utm: UtmParams;
 }
 
 /** Tracked manually by Roger alongside the founder-slot count in PLANS below. */
@@ -121,7 +123,7 @@ function useFadeUpOnScroll() {
   }, []);
 }
 
-export function LandingContent({ salesWhatsAppE164 }: LandingContentProps) {
+export function LandingContent({ salesWhatsAppE164, utm }: LandingContentProps) {
   const [activeTab, setActiveTab] = useState(TABS[0].id);
   const tabPanelRef = useRef<HTMLDivElement>(null);
   useFadeUpOnScroll();
@@ -334,7 +336,7 @@ export function LandingContent({ salesWhatsAppE164 }: LandingContentProps) {
                   <li>→ Controle financeiro em tempo real</li>
                 </ul>
                 <Link
-                  href={plan.checkoutUrl}
+                  href={appendUtmParams(plan.checkoutUrl, utm)}
                   onClick={trackLeadClick}
                   className={`block rounded-full px-6 py-3.5 text-center font-semibold transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.98] ${
                     plan.highlight ? "bg-amber-400 text-zinc-950" : "border border-zinc-700 text-zinc-100"

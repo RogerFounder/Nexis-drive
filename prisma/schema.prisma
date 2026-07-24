@@ -176,9 +176,18 @@ model CheckoutSession {
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
 
+  // Captured from the landing page's query string at click time. Nullable —
+  // direct traffic (no ad click) has none of these.
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  utmContent  String?
+  utmTerm     String?
+
   provisioningRequest ProvisioningRequest?
 
   @@index([token])
+  @@index([utmSource, utmCampaign])
   @@map("checkout_sessions")
 }
 

@@ -3,6 +3,7 @@ import Script from "next/script";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import { LandingContent } from "./landing-content";
+import { extractUtmParams } from "@/lib/utm";
 
 export const metadata: Metadata = {
   title: "Nexus Drive — Menos curioso, menos dor de cabeça",
@@ -16,7 +17,11 @@ const SALES_WHATSAPP_E164 = "5551981351255";
 // authenticated dashboard routes, which have no reason to report to Meta.
 const META_PIXEL_ID = "2044446372870014";
 
-export default async function LandingPage() {
+export default async function LandingPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   // This codebase is deployed once per client (each with its own Vercel
   // project), all tracking the same `main` branch. Without this gate, this
   // sales page for Nexus Drive itself would go live inside every client's
@@ -29,6 +34,8 @@ export default async function LandingPage() {
   // nonce — Next.js auto-applies it to its own bundled scripts, but custom
   // inline scripts like this one need it passed explicitly.
   const nonce = (await headers()).get("x-nonce") ?? undefined;
+
+  const utm = extractUtmParams(await searchParams);
 
   return (
     <>
@@ -56,7 +63,7 @@ export default async function LandingPage() {
           src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
         />
       </noscript>
-      <LandingContent salesWhatsAppE164={SALES_WHATSAPP_E164} />
+      <LandingContent salesWhatsAppE164={SALES_WHATSAPP_E164} utm={utm} />
     </>
   );
 }
