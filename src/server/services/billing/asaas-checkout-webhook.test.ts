@@ -9,6 +9,7 @@ vi.mock("@/server/db/repositories/checkout-session.repository", () => ({
   findCheckoutSessionByToken: vi.fn(),
   findCheckoutSessionByCustomerId: vi.fn(),
   updateCheckoutSessionStatus: vi.fn(),
+  checkoutSessionExistsForCustomerId: vi.fn(),
 }));
 vi.mock("@/server/db/repositories/subscription.repository", () => ({
   getSubscriptionByAsaasCustomerId: vi.fn().mockResolvedValue(null),
@@ -24,8 +25,10 @@ import {
   findCheckoutSessionByToken,
   findCheckoutSessionByCustomerId,
   updateCheckoutSessionStatus,
+  checkoutSessionExistsForCustomerId,
 } from "@/server/db/repositories/checkout-session.repository";
 import { sendWelcomeCheckoutEmail } from "@/server/services/notifications/email-channel";
+import { prisma } from "@/server/db/client";
 import { applyAsaasWebhook } from "./asaas-webhook";
 
 const SESSION_AWAITING = {
@@ -54,6 +57,7 @@ beforeEach(() => {
   vi.mocked(findCheckoutSessionByToken).mockResolvedValue(null);
   vi.mocked(findCheckoutSessionByCustomerId).mockResolvedValue(null);
   vi.mocked(updateCheckoutSessionStatus).mockResolvedValue(undefined);
+  vi.mocked(checkoutSessionExistsForCustomerId).mockResolvedValue(false);
   vi.mocked(sendWelcomeCheckoutEmail).mockResolvedValue(undefined);
   delete process.env.ASAAS_CUSTOMER_ID;
   delete process.env.NEXT_PUBLIC_APP_URL;
@@ -125,6 +129,20 @@ describe("applyAsaasWebhook — checkout session detection", () => {
     // PAST_DUE is not ACTIVE, so checkout branch is not entered.
     expect(findCheckoutSessionByToken).not.toHaveBeenCalled();
     expect(outcome).toBe("NO_SUBSCRIPTION");
+  });
+
+  it("ignores a canceled/deleted event for an unconverted checkout prospect instead of misattributing it to the deployment's own admin", async () => {
+    vi.mocked(checkoutSessionExistsForCustomerId).mockResolvedValue(true);
+    const findFirst = vi.mocked(prisma.admin.findFirst);
+
+    const outcome = await applyAsaasWebhook({
+      event: "SUBSCRIPTION_DELETED",
+      subscription: { id: "sub_test", customer: "cus_prospect_test" },
+    });
+
+    expect(checkoutSessionExistsForCustomerId).toHaveBeenCalledWith("cus_prospect_test");
+    expect(outcome).toBe("IGNORED");
+    expect(findFirst).not.toHaveBeenCalled();
   });
 });
 

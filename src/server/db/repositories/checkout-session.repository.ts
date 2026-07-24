@@ -33,6 +33,20 @@ export function findCheckoutSessionByCustomerId(
   });
 }
 
+/**
+ * True if this Asaas customerId belongs to a self-serve checkout prospect
+ * (regardless of status) rather than to this deployment's own operator.
+ * Used by the webhook to keep a prospect's payment lifecycle — including an
+ * abandoned/canceled test — from ever being misattributed to the admin's
+ * own Subscription.
+ */
+export async function checkoutSessionExistsForCustomerId(
+  asaasCustomerId: string
+): Promise<boolean> {
+  const count = await prisma.checkoutSession.count({ where: { asaasCustomerId } });
+  return count > 0;
+}
+
 export async function updateCheckoutSessionStatus(
   id: string,
   status: CheckoutSessionStatus

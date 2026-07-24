@@ -7,6 +7,7 @@ import {
   upsertSubscriptionForAdmin,
 } from "@/server/db/repositories/subscription.repository";
 import {
+  checkoutSessionExistsForCustomerId,
   findCheckoutSessionByCustomerId,
   findCheckoutSessionByToken,
   updateCheckoutSessionStatus,
@@ -110,6 +111,14 @@ export async function applyAsaasWebhook(payload: AsaasWebhookPayload): Promise<W
     : expectedCustomerId
       ? null
       : await getSoleSubscription();
+
+  // A self-serve checkout prospect's customerId is never this deployment's
+  // own operator, even if their payment was later deleted/refunded/canceled
+  // before ever converting into a real Subscription here — never let that
+  // fall through to the "attribute to whichever admin exists" fallback below.
+  if (!existing && customerId && (await checkoutSessionExistsForCustomerId(customerId))) {
+    return "IGNORED";
+  }
 
   const adminId =
     existing?.adminId ?? (expectedCustomerId ? null : (await prisma.admin.findFirst())?.id) ?? null;
