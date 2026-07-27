@@ -7,9 +7,6 @@ import { MobileNav } from "@/components/shared/dashboard/mobile-nav";
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const { email, access } = await requireDashboardAccess();
-  // Campaign UTM reporting only makes sense on the flagship deployment,
-  // which is the only one that ever populates CheckoutSession rows.
-  const showCampaigns = process.env.ENABLE_MARKETING_LANDING === "true";
 
   return (
     <div className="relative flex min-h-full flex-1 flex-col overflow-hidden bg-zinc-950 print:bg-white">
@@ -40,11 +37,6 @@ export default async function DashboardLayout({ children }: { children: ReactNod
             <Link href="/dashboard/configuracoes" className="transition-colors hover:text-zinc-100">
               Configurações
             </Link>
-            {showCampaigns && (
-              <Link href="/dashboard/campanhas" className="transition-colors hover:text-zinc-100">
-                Campanhas
-              </Link>
-            )}
           </nav>
           <div className="hidden items-center gap-3 sm:flex">
             <span className="text-xs text-zinc-500">{email}</span>
@@ -57,7 +49,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
               </button>
             </form>
           </div>
-          <MobileNav email={email} showCampaigns={showCampaigns} />
+          <MobileNav email={email} />
         </div>
       </header>
       {access.reason === "TRIAL" && (

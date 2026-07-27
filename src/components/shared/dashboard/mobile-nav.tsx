@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logoutAction } from "@/server/actions/logout.action";
 
-const BASE_NAV_LINKS = [
+const NAV_LINKS = [
   { href: "/dashboard", label: "Visão geral" },
   { href: "/dashboard/leads", label: "Leads" },
   { href: "/dashboard/laudo", label: "Laudo Técnico" },
@@ -14,15 +14,11 @@ const BASE_NAV_LINKS = [
 
 interface MobileNavProps {
   email: string;
-  showCampaigns?: boolean;
 }
 
-export function MobileNav({ email, showCampaigns }: MobileNavProps) {
+export function MobileNav({ email }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const NAV_LINKS = showCampaigns
-    ? [...BASE_NAV_LINKS, { href: "/dashboard/campanhas", label: "Campanhas" }]
-    : BASE_NAV_LINKS;
 
   return (
     <div className="sm:hidden">
